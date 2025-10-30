@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     const client = new OpenAI({
       baseURL: "https://router.huggingface.co/v1",
-      apiKey: process.env.HF_TOKEN, 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// 这里填 Hugging Face 的 Token（在 Vercel 设置环境变量）
+      apiKey: process.env.HF_TOKEN, // 这里填 Hugging Face 的 Token（在 Vercel 设置环境变量）
     });
 
     const chatCompletion = await client.chat.completions.create({
@@ -36,4 +36,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "AI服务暂时不可用，请稍后再试 🌙" });
   }
 }
+
 
