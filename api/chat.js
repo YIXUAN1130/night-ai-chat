@@ -1,6 +1,4 @@
-// api/chat.js   （如果你用的是 api/聊天.js，文件名和前端 fetch 路径要一致）
-import OpenAI from "openai";
-
+// api/chat.js - 直连 Hugging Face Inference API
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -12,33 +10,39 @@ export default async function handler(req, res) {
   }
 
   try {
-    const client = new OpenAI({
-      // ✅ 必须是这个入口：HF 的 OpenAI 兼容 API
-      baseURL: "https://api-inference.huggingface.co/v1",
-      apiKey: process.env.HF_TOKEN, // 在 Vercel 环境变量设置
-    });
+    const resp = await fetch(
+      "https://api-inference.huggingface.co/models/Qwen/Qwen2-0.5B-Instruct",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.HF_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: `系统：你是夜空AI，一个温柔体贴、善解人意的中文聊天伙伴。\n用户：${message}\n夜空AI：`,
+          options: { wait_for_model: true }
+        }),
+      }
+    );
 
-    const chatCompletion = await client.chat.completions.create({
-      // ✅ 使用兼容模型，避免 404
-      model: "Qwen/Qwen2-0.5B-Instruct",
-      messages: [
-        { role: "system", content: "你是夜空AI，一个温柔体贴、善解人意的中文聊天伙伴。" },
-        { role: "user", content: message },
-      ],
-      temperature: 0.8,
-      max_tokens: 300,
-    });
+    if (!resp.ok) {
+      const err = await resp.text();
+      console.error("HF Inference Error:", err);
+      return res.status(500).json({ error: "HF 调用失败", detail: err });
+    }
 
+    const data = await resp.json();
     const reply =
-      chatCompletion.choices?.[0]?.message?.content ||
-      "🌙 夜空AI暂时没有回应。";
+      Array.isArray(data) && data[0]?.generated_text
+        ? data[0].generated_text.split("夜空AI：").pop().trim()
+        : "🌙 夜空AI暂时没有回应。";
+
     res.status(200).json({ reply });
   } catch (error) {
-    // 打印 HF 返回的详细错误，便于你在 Runtime Logs 里看到真实原因
-    console.error("Chat API Error:", error?.response?.data || error?.message || error);
-    res.status(500).json({
-      error: "AI服务暂时不可用，请稍后再试 🌙",
-      detail: error?.response?.data || error?.message || String(error),
-    });
+    console.error("HF Inference Call Error:", error);
+    res.status(500).json({ error: "AI服务暂时不可用，请稍后再试 🌙" });
   }
 }
+
+}
+
