@@ -1,42 +1,36 @@
+// /api/chat.js
+const DEFAULT_MODEL = process.env.HF_MODEL || "TinyLlama/TinyLlama-1.1B-Chat-v1.0";
+
 export default async function handler(req, res) {
-  // 健康检查：GET /api/chat?ping=1
+  // 健康检查
   if (req.method === "GET" && req.query.ping === "1") {
     return res.status(200).json({
       ok: true,
       route: "/api/chat",
-      model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      model: DEFAULT_MODEL,
       hfTokenPresent: !!process.env.HF_TOKEN,
-      tip: "hfTokenPresent=true 表示 Vercel 环境变量配置成功；若为 false，请到 Settings > Environment Variables 设置 HF_TOKEN。"
+      tip: "hfTokenPresent 为 true 表示 Vercel 环境变量 HF_TOKEN 已配置好。",
     });
   }
 
-  // 限制：必须是 POST 请求
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed (GET 仅支持 ?ping=1)" });
   }
 
-  // 取用户输入
   const { message } = req.body || {};
-  if (!message) {
-    return res.status(400).json({ error: "Missing message" });
-  }
+  if (!message) return res.status(400).json({ error: "Missing message" });
 
-  // 检查 Hugging Face Token
   const HF_TOKEN = process.env.HF_TOKEN;
-  if (!HF_TOKEN) {
-    return res.status(500).json({ error: "HF_TOKEN not found in environment" });
-  }
+  if (!HF_TOKEN) return res.status(500).json({ error: "HF_TOKEN not found in environment" });
 
-  // 使用更轻量稳定的模型
-  const endpoint = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0";
-
-  // 生成提示词
-  const systemPrompt = "你是夜空AI，一个温柔体贴的中文聊天伙伴。请用简短、安抚的语气回复，让用户感到被理解。";
+  const endpoint = `https://api-inference.huggingface.co/models/${encodeURIComponent(DEFAULT_MODEL)}`;
+  const systemPrompt =
+    "你是夜空AI，一个温柔体贴的中文聊天伙伴。请用简短、安抚的语气回复，让用户感到被理解。";
   const prompt = `${systemPrompt}\n\n用户：${message}\n夜空AI：`;
 
-  try {
-    // 调用 Hugging Face 推理接口
-    const hfResp = await fetch(endpoint, {
+  // 简单重试（模型加载/限流）
+  async function callOnce() {
+    const resp = await fetch(endpoint, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${HF_TOKEN}`,
@@ -50,49 +44,55 @@ export default async function handler(req, res) {
           top_p: 0.95,
           return_full_text: false,
         },
+        // 关键：等待模型加载，避免 503
+        options: { wait_for_model: true, use_cache: true },
       }),
     });
+    const text = await resp.text();
+    return { resp, text };
+  }
 
-    const text = await hfResp.text();
+  try {
+    let out = await callOnce();
 
-    // Hugging Face 报错处理
-    if (!hfResp.ok) {
+    // 对典型错误做一次重试
+    if (out.resp.status === 503 || out.resp.status === 429) {
+      await new Promise(r => setTimeout(r, 1500));
+      out = await callOnce();
+    }
+
+    if (!out.resp.ok) {
       return res.status(500).json({
         error: "HF_API_ERROR",
-        status: hfResp.status,
-        details: text,
+        status: out.resp.status,
+        details: out.text, // 把 HF 的原始返回体给前端，便于定位
       });
     }
 
+    // 尝试解析
     let data;
     try {
-      data = JSON.parse(text);
+      data = JSON.parse(out.text);
     } catch {
-      return res.status(500).json({ error: "HF_API_PARSE_ERROR", raw: text });
+      return res.status(500).json({ error: "HF_API_PARSE_ERROR", raw: out.text });
     }
 
-    // 解析回复内容
+    // 兼容不同返回形态
     let reply = "";
     if (Array.isArray(data) && data[0]?.generated_text) {
       reply = data[0].generated_text.trim();
     } else if (typeof data === "string") {
       reply = data.trim();
+    } else if (data?.generated_text) {
+      reply = (data.generated_text || "").trim();
     } else {
       reply = JSON.stringify(data);
     }
 
-    // 如果模型返回空
-    if (!reply) {
-      reply = "✨ 我听懂了，也许你需要一点时间放松。";
-    }
-
+    if (!reply) reply = "✨ 我听懂了，也许你需要一点时间放松。";
     return res.status(200).json({ reply });
-
   } catch (err) {
-    console.error("Server error:", err);
-    return res.status(500).json({
-      error: "SERVER_ERROR",
-      message: err.message || String(err),
-    });
+    console.error("SERVER_ERROR:", err);
+    return res.status(500).json({ error: "SERVER_ERROR", message: err.message || String(err) });
   }
 }
