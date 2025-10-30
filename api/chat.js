@@ -1,39 +1,33 @@
 // api/chat.js
-// ✅ 仅修正模型名大小写：tinyllama/TinyLlama-1.1B-Chat-v1.0
-const DEFAULT_MODEL = process.env.HF_MODEL || "tinyllama/TinyLlama-1.1B-Chat-v1.0";
+// ✅ 修正模型名为 TinyLlama/TinyLlama-1.1B-Chat-v0.6
+const DEFAULT_MODEL = process.env.HF_MODEL || "TinyLlama/TinyLlama-1.1B-Chat-v0.6";
 
 export default async function handler(req, res) {
   const HF_TOKEN = process.env.HF_TOKEN;
 
-  // 便捷健康检查：GET /api/chat?ping=1
+  // 健康检查
   if (req.method === "GET" && req.query.ping === "1") {
     return res.status(200).json({
       ok: true,
       route: "/api/chat",
       model: DEFAULT_MODEL,
       hfTokenPresent: !!HF_TOKEN,
-      tip: "hfTokenPresent=true 才算配置了 HF_TOKEN；若为 false，请到 Vercel > Settings > Environment Variables 设置。",
+      tip: "若 hfTokenPresent 为 false，请在 Vercel > Settings > Environment Variables 中设置 HF_TOKEN。",
     });
   }
 
   if (req.method !== "POST") {
-    return res
-      .status(405)
-      .json({ error: "Method not allowed (GET 仅支持 ?ping=1)" });
+    return res.status(405).json({ error: "Method not allowed (GET 仅支持 ?ping=1)" });
   }
 
   if (!HF_TOKEN) {
-    return res
-      .status(500)
-      .json({ error: "HF_TOKEN not found in environment" });
+    return res.status(500).json({ error: "HF_TOKEN not found in environment" });
   }
 
   const { message } = req.body || {};
   if (!message) return res.status(400).json({ error: "Missing message" });
 
-  const endpoint = `https://api-inference.huggingface.co/models/${encodeURIComponent(
-    DEFAULT_MODEL
-  )}`;
+  const endpoint = `https://api-inference.huggingface.co/models/${encodeURIComponent(DEFAULT_MODEL)}`;
 
   const systemPrompt =
     "你是夜空AI，一个温柔体贴的中文聊天伙伴。请用简短、安抚的语气回复，让用户感到被理解。";
@@ -64,7 +58,7 @@ export default async function handler(req, res) {
   try {
     let out = await callOnce();
 
-    // 模型冷启动或限流时重试一次
+    // 再试一次（模型加载或限流时）
     if (out.resp.status === 503 || out.resp.status === 429) {
       await new Promise((r) => setTimeout(r, 1500));
       out = await callOnce();
@@ -74,7 +68,7 @@ export default async function handler(req, res) {
       return res.status(500).json({
         error: "HF_API_ERROR",
         status: out.resp.status,
-        details: out.text, // 把 HF 的原始返回体给前端，便于定位
+        details: out.text,
       });
     }
 
@@ -82,12 +76,9 @@ export default async function handler(req, res) {
     try {
       data = JSON.parse(out.text);
     } catch {
-      return res
-        .status(500)
-        .json({ error: "HF_API_PARSE_ERROR", raw: out.text });
+      return res.status(500).json({ error: "HF_API_PARSE_ERROR", raw: out.text });
     }
 
-    // 兼容多种返回
     let reply = "";
     if (Array.isArray(data) && data[0]?.generated_text) {
       reply = data[0].generated_text.trim();
@@ -99,12 +90,11 @@ export default async function handler(req, res) {
       reply = JSON.stringify(data);
     }
 
-    if (!reply) reply = "✨ 我听到了，也许你需要一点时间放松。";
+    if (!reply) reply = "✨ 我听懂了，也许你需要一点时间放松。";
     return res.status(200).json({ reply });
   } catch (err) {
-    return res.status(500).json({
-      error: "SERVER_ERROR",
-      message: err?.message || String(err),
-    });
+    console.error("SERVER_ERROR:", err);
+    return res.status(500).json({ error: "SERVER_ERROR", message: err.message || String(err) });
   }
 }
+
