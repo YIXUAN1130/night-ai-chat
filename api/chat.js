@@ -1,17 +1,18 @@
-// /api/chat.js
 const DEFAULT_MODEL = process.env.HF_MODEL || "TinyLlama/TinyLlama-1.1B-Chat-v1.0";
 
 export default async function handler(req, res) {
-  // 健康检查
+  console.log("💡 HF_TOKEN:", process.env.HF_TOKEN ? "✅ exists" : "❌ missing");
+  console.log("🧠 Model:", DEFAULT_MODEL);
+
   if (req.method === "GET" && req.query.ping === "1") {
     return res.status(200).json({
       ok: true,
       route: "/api/chat",
       model: DEFAULT_MODEL,
       hfTokenPresent: !!process.env.HF_TOKEN,
-      tip: "hfTokenPresent 为 true 表示 Vercel 环境变量 HF_TOKEN 已配置好。",
     });
   }
+
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed (GET 仅支持 ?ping=1)" });
@@ -96,3 +97,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "SERVER_ERROR", message: err.message || String(err) });
   }
 }
+
