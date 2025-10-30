@@ -13,12 +13,12 @@ export default async function handler(req, res) {
 
   try {
     const client = new OpenAI({
-      baseURL: "https://api-inference.huggingface.co/v1", // ✅ 必须是 inference
-      apiKey: process.env.HF_TOKEN, // ✅ 从 Vercel 环境变量读取
+      baseURL: "https://api-inference.huggingface.co/v1", // ✅ Hugging Face endpoint
+      apiKey: process.env.HF_TOKEN, // ✅ 从环境变量读取 Token
     });
 
     const chatCompletion = await client.chat.completions.create({
-      model: "shenzhi-wang/Llama3.1-8B-Chinese-Chat", // ✅ 不带后缀
+      model: "shenzhi-wang/Llama3.1-8B-Chinese-Chat",
       messages: [
         {
           role: "system",
@@ -40,6 +40,8 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "AI服务暂时不可用，请稍后再试 🌙" });
   }
 }
+
+
 
 
 
