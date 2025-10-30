@@ -1,44 +1,39 @@
+// api/chat.js
+import OpenAI from "openai";
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ error: "Missing message" });
   }
 
   try {
-    const { message } = req.body;
-    if (!message || message.trim() === "") {
-      return res.status(400).json({ error: "Missing input message" });
-    }
+    const client = new OpenAI({
+      baseURL: "https://router.huggingface.co/v1",
+      apiKey: process.env.HF_TOKEN, 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// 这里填 Hugging Face 的 Token（在 Vercel 设置环境变量）
+    });
 
-    const model = "shenzhi-wang/Llama3.1-8B-Chinese-Chat";
-
-    const response = await fetch(
-      `https://api-inference.huggingface.co/models/${model}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.HF_TOKEN}`,
-          "Content-Type": "application/json",
+    const chatCompletion = await client.chat.completions.create({
+      model: "shenzhi-wang/Llama3.1-8B-Chinese-Chat:featherless-ai",
+      messages: [
+        {
+          role: "user",
+          content: message,
         },
-        body: JSON.stringify({
-          inputs: message,
-          parameters: { max_new_tokens: 100, temperature: 0.8 },
-        }),
-      }
-    );
+      ],
+      temperature: 0.7,
+      max_tokens: 200,
+    });
 
-    const data = await response.json();
-
-    let reply =
-      data?.[0]?.generated_text ||
-      data?.generated_text ||
-      "🌙 我听懂了，也许你需要一点时间放松。";
-
-    reply = reply.replace(/^.*?：/, "").trim();
+    const reply = chatCompletion.choices[0]?.message?.content || "🌙 夜空AI暂时没有回应。";
     res.status(200).json({ reply });
   } catch (error) {
-    console.error("❌ Chat API Error:", error);
-    res
-      .status(500)
-      .json({ error: "AI 模型暂时无法响应，请稍后再试 🌙" });
+    console.error("Chat API Error:", error);
+    res.status(500).json({ error: "AI服务暂时不可用，请稍后再试 🌙" });
   }
 }
+
