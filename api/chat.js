@@ -1,4 +1,3 @@
-// api/chat.js
 import OpenAI from "openai";
 
 export default async function handler(req, res) {
@@ -12,19 +11,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 初始化 Hugging Face 接口客户端
     const client = new OpenAI({
       baseURL: "https://api-inference.huggingface.co/v1",
-      apiKey: process.env.HF_TOKEN, // 你在 Vercel 设置的 Hugging Face Token
+      apiKey: process.env.HF_TOKEN,
     });
 
-    // 调用 Qwen 模型（轻量、速度快）
     const chatCompletion = await client.chat.completions.create({
       model: "Qwen/Qwen1.5-0.5B-Chat",
       messages: [
         {
           role: "system",
-          content: "你是夜空AI，一个温柔体贴的中文聊天伙伴。请用简洁、自然的语气回应用户。",
+          content: "你是夜空AI，一个温柔体贴、善解人意的中文聊天伙伴。",
         },
         {
           role: "user",
