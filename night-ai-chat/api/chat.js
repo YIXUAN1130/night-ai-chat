@@ -13,28 +13,37 @@ export default async function handler(req, res) {
 
   try {
     const client = new OpenAI({
-      baseURL: "https://router.huggingface.co/v1",
-      apiKey: process.env.HF_TOKEN, // 这里填 Hugging Face 的 Token（在 Vercel 设置环境变量）
+      baseURL: "https://api-inference.huggingface.co/v1", // ✅ 修改这里
+      apiKey: process.env.HF_TOKEN, // ✅ 环境变量取 Hugging Face token
     });
 
     const chatCompletion = await client.chat.completions.create({
       model: "shenzhi-wang/Llama3.1-8B-Chinese-Chat:featherless-ai",
       messages: [
         {
+          role: "system",
+          content:
+            "你是夜空AI，一个温柔细腻、懂人心的中文聊天伙伴。请用温柔语气回应用户，让对方感到被理解。",
+        },
+        {
           role: "user",
           content: message,
         },
       ],
-      temperature: 0.7,
-      max_tokens: 200,
+      temperature: 0.8,
+      max_tokens: 300,
     });
 
-    const reply = chatCompletion.choices[0]?.message?.content || "🌙 夜空AI暂时没有回应。";
+    const reply =
+      chatCompletion.choices?.[0]?.message?.content ||
+      "🌙 夜空AI暂时没有回应。";
     res.status(200).json({ reply });
   } catch (error) {
     console.error("Chat API Error:", error);
     res.status(500).json({ error: "AI服务暂时不可用，请稍后再试 🌙" });
   }
 }
+
+
 
 
