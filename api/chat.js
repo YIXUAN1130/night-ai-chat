@@ -1,96 +1,98 @@
-// api/chat.js —— 直接调用 Hugging Face Inference API（非 OpenAI 兼容）
 export default async function handler(req, res) {
-  // 诊断用：/api/chat?ping=1
-  if (req.query.ping) {
+  // 健康检查：GET /api/chat?ping=1
+  if (req.method === "GET" && req.query.ping === "1") {
     return res.status(200).json({
       ok: true,
       route: "/api/chat",
-      mode: "inference",
-      model: "Qwen/Qwen2-0.5B-Instruct",
+      model: "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       hfTokenPresent: !!process.env.HF_TOKEN,
-      tip: "若 hfTokenPresent=false 才需去 Vercel > Settings > Environment Variables 配置 HF_TOKEN",
+      tip: "hfTokenPresent=true 表示 Vercel 环境变量配置成功；若为 false，请到 Settings > Environment Variables 设置 HF_TOKEN。"
     });
   }
 
+  // 限制：必须是 POST 请求
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ error: "Method not allowed (GET 仅支持 ?ping=1)" });
   }
 
-  let body = {};
-  try {
-    body = req.body || {};
-  } catch (e) {}
-  const { message } = body;
-
+  // 取用户输入
+  const { message } = req.body || {};
   if (!message) {
     return res.status(400).json({ error: "Missing message" });
   }
 
-  try {
-    const endpoint =
-      "https://api-inference.huggingface.co/models/Qwen/Qwen2-0.5B-Instruct";
+  // 检查 Hugging Face Token
+  const HF_TOKEN = process.env.HF_TOKEN;
+  if (!HF_TOKEN) {
+    return res.status(500).json({ error: "HF_TOKEN not found in environment" });
+  }
 
-    const r = await fetch(endpoint, {
+  // 使用更轻量稳定的模型
+  const endpoint = "https://api-inference.huggingface.co/models/TinyLlama/TinyLlama-1.1B-Chat-v1.0";
+
+  // 生成提示词
+  const systemPrompt = "你是夜空AI，一个温柔体贴的中文聊天伙伴。请用简短、安抚的语气回复，让用户感到被理解。";
+  const prompt = `${systemPrompt}\n\n用户：${message}\n夜空AI：`;
+
+  try {
+    // 调用 Hugging Face 推理接口
+    const hfResp = await fetch(endpoint, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.HF_TOKEN}`,
+        Authorization: `Bearer ${HF_TOKEN}`,
         "Content-Type": "application/json",
-        // 可选：避免缓存 & 冷启动稳定一些
-        "x-use-cache": "false",
       },
       body: JSON.stringify({
-        inputs: message,
+        inputs: prompt,
         parameters: {
-          max_new_tokens: 160,
-          temperature: 0.7,
-          top_p: 0.9,
-          // 只返回新增的生成部分
+          max_new_tokens: 180,
+          temperature: 0.8,
+          top_p: 0.95,
           return_full_text: false,
-        },
-        options: {
-          wait_for_model: true, // 首次会“唤醒”模型，可能慢 10~20s
-          use_cache: false,
         },
       }),
     });
 
-    if (!r.ok) {
-      const text = await r.text();
+    const text = await hfResp.text();
+
+    // Hugging Face 报错处理
+    if (!hfResp.ok) {
       return res.status(500).json({
         error: "HF_API_ERROR",
-        status: r.status,
-        details: text?.slice(0, 400) || "no details",
+        status: hfResp.status,
+        details: text,
       });
     }
 
-    const data = await r.json();
-
-    // HF 返回格式可能是：
-    // 1) [{ generated_text: "..." }]
-    // 2) { generated_text: "..." }
-    // 3) 其他任务结构（兜底）
-    let reply = "";
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      reply = data[0].generated_text;
-    } else if (data?.generated_text) {
-      reply = data.generated_text;
-    } else if (Array.isArray(data) && data[0]?.content) {
-      reply = data[0].content;
-    } else {
-      // 兜底，便于调试
-      reply = typeof data === "string" ? data : JSON.stringify(data).slice(0, 200);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      return res.status(500).json({ error: "HF_API_PARSE_ERROR", raw: text });
     }
 
-    // 简单清洗（可选）
-    reply = (reply || "").trim();
-    if (!reply) reply = "✨ 我听见了，也会一直在。";
+    // 解析回复内容
+    let reply = "";
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      reply = data[0].generated_text.trim();
+    } else if (typeof data === "string") {
+      reply = data.trim();
+    } else {
+      reply = JSON.stringify(data);
+    }
+
+    // 如果模型返回空
+    if (!reply) {
+      reply = "✨ 我听懂了，也许你需要一点时间放松。";
+    }
 
     return res.status(200).json({ reply });
+
   } catch (err) {
+    console.error("Server error:", err);
     return res.status(500).json({
       error: "SERVER_ERROR",
-      details: String(err),
+      message: err.message || String(err),
     });
   }
 }
-
