@@ -8,20 +8,19 @@ body {
   height: 100vh;
 }
 
-/* 外层框架大小 = 你的像素宽高 */
+/* ✔ 缩小过的边框尺寸（你能看到） */
 .frame-wrap {
   position: relative;
-  width: 1459px;
-  height: 768px;
+  width: 420px;       /* 你可以调整：改成你喜欢的宽度 */
+  height: 300px;      /* 改成你喜欢的高度 */
 }
 
-/* 纯背景边框 */
+/* 手绘背景框 */
 .cute-frame {
   width: 100%;
   height: 100%;
   background: #fffdf7;
 
-  /* 手绘波浪边框遮罩 */
   -webkit-mask: url('data:image/svg+xml;utf8,\
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70">\
     <path d="M5,5 
@@ -36,14 +35,15 @@ body {
   </svg>') center/100% 100% no-repeat;
 
   border: 2px dashed rgba(0,0,0,0.4);
-  border-radius: 12px;
+  border-radius: 10px;
 }
 
-/* 小熊装饰图：缩小并让一半压住边线 */
+/* ✔ 缩小后的熊熊（150px） */
+/* ✔ 一半压在线上 */
 .bear-deco {
-  width: 260px;   /* ← 你可调整大小 */
+  width: 150px;                 /* 缩小后 */
   position: absolute;
-  bottom: -130px; /* 压住一半高度（-高度的一半） */
+  bottom: -75px;                /* - 宽度的一半（150/2=75） */
   left: 50%;
   transform: translateX(-50%);
 }
