@@ -1,99 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>星星动态背景页面</title>
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #ffffff;
-      font-family: sans-serif;
-    }
-
-    /* 星星画布 */
-    #stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-    }
-
-    /* 中间图片区域 */
-    .content {
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card {
-      width: 360px;
-      max-width: 90%;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可爱文本框</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- 动态星星背景 -->
-  <canvas id="stars"></canvas>
-
-  <!-- 页面主体：你生成的图片 -->
-  <div class="content">
-    <img src="./bg.png" class="card">
+<div class="container">
+  <div class="note-box">
+    <textarea class="note-input" placeholder="在这里输入文字..."></textarea>
+    <img src="bear.gif" class="bear-deco" />
   </div>
-
-  <script>
-    const canvas = document.getElementById("stars");
-    const ctx = canvas.getContext("2d");
-
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
-
-    const stars = [];
-    const starCount = 80;
-
-    for (let i = 0; i < starCount; i++) {
-      stars.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 0.6 + 0.3
-      });
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, w, h);
-
-      stars.forEach(s => {
-        ctx.fillStyle = "black";
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        s.y += s.speed;
-        if (s.y > h) {
-          s.y = -5;
-          s.x = Math.random() * w;
-        }
-      });
-
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    window.onresize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    };
-  </script>
+</div>
 
 </body>
 </html>
