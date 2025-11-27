@@ -2,52 +2,40 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>GIF 半在框内 半在框外</title>
+<title>1:1 复刻文本框 + GIF</title>
+
 <style>
   body {
     margin: 0;
     padding: 0;
-    background: #ffffff;
     height: 100vh;
+    background: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  /* 文本框：改成波浪虚线框 */
+  /* 外层容器（保持结构不变） */
   .text-box {
-    width: 340px;
-    height: 200px;
+    width: 450px;   /* 文本框原图宽度（精确） */
+    height: 650px;  /* 文本框原图高度（精确） */
     position: relative;
-    background: #fffdf6;          /* 仿原图淡米色底 */
     overflow: visible;
-
-    border: 0;                    /* 取消原本矩形边框 */
-    
-    /* 波浪虚线边框 (clip-path + outline) */
-    clip-path: path("M 20 40 
-        Q 80 5, 160 40 
-        T 300 40 
-        Q 360 50, 360 120 
-        T 360 200
-        Q 300 250, 200 230
-        T 20 230
-        Q 5 200, 20 120
-        T 20 40");
-
-    outline: 3px dashed black;     /* 虚线边 */
-    outline-offset: -2px;          /* 让虚线更贴边 */
-    border-radius: 40px;           /* 稍微加圆润感 */
+    background-image: url("bg.png"); /* 你的波浪虚线框 */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
-  /* GIF：一半在框内 一半在框外（保持原样） */
+  /* GIF：严格 1:1 原图大小 + 半入半出效果 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 140px;
-    bottom: -70px;
+    width: 260px;       /* 你的 GIF 原始宽度 */
+    bottom: -130px;     /* GIF 高度为 260px → 一半 = 130px */
   }
+
 </style>
 </head>
 
