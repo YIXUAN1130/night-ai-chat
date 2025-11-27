@@ -8,20 +8,20 @@ body {
   height: 100vh;
 }
 
-/* 外层位置控制 */
-.container {
+/* 外层框架大小 = 你的像素宽高 */
+.frame-wrap {
   position: relative;
-  width: 420px;
-  height: 320px;
+  width: 1459px;
+  height: 768px;
 }
 
-/* 手绘波浪边框背景框 */
+/* 纯背景边框 */
 .cute-frame {
   width: 100%;
   height: 100%;
   background: #fffdf7;
 
-  /* 波浪形状（关键） */
+  /* 手绘波浪边框遮罩 */
   -webkit-mask: url('data:image/svg+xml;utf8,\
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70">\
     <path d="M5,5 
@@ -36,13 +36,14 @@ body {
   </svg>') center/100% 100% no-repeat;
 
   border: 2px dashed rgba(0,0,0,0.4);
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
-/* 小熊装饰图 */
+/* 小熊装饰图：缩小并让一半压住边线 */
 .bear-deco {
-  width: 120px;
+  width: 260px;   /* ← 你可调整大小 */
   position: absolute;
-  bottom: -10px;
-  left: 20px;
+  bottom: -130px; /* 压住一半高度（-高度的一半） */
+  left: 50%;
+  transform: translateX(-50%);
 }
