@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>框 + GIF</title>
+<title>GIF 半在框内 半在框外</title>
 <style>
   body {
     margin: 0;
@@ -16,23 +16,22 @@
 
   /* 文本框 */
   .text-box {
-    width: 340px;            /* 你可以自己改 */
-    height: 200px;           /* 你可以自己改 */
-    border: 2px solid black; /* 黑色边框 */
-    position: relative;       /* 让 GIF 贴在底部 */
+    width: 340px;      /* 可调整 */
+    height: 200px;     /* 可调整 */
+    border: 2px solid black;
+    position: relative;
     background: white;
+    overflow: visible;  /* 关键：允许内容溢出，否则GIF露不出来 */
   }
 
-  /* GIF（只露出上半部分） */
-  .gif-half {
+  /* GIF：一半在框内 一半在框外 */
+  .gif-cross {
     position: absolute;
-    bottom: -40px;       /* 控制 GIF 插入框的深度，可微调 */
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;        /* 缩小 GIF 大小 */
-    height: auto;
-    clip-path: inset(50% 0 0 0);  /* 只显示上半部分 */
-    pointer-events: none; /* 不影响点击 */
+    width: 140px;       /* GIF缩小比例，可调整 */
+    bottom: -70px;      /* 这个值 = GIF高度的一半 */
+                        /* 让 GIF 正好跨在底线上 */
   }
 </style>
 </head>
@@ -40,8 +39,7 @@
 <body>
 
 <div class="text-box">
-  <!-- GIF（替换为你的路径） -->
-  <img src="your.gif" class="gif-half">
+  <img src="your.gif" class="gif-cross">
 </div>
 
 </body>
