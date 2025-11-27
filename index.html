@@ -2,44 +2,64 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>GIF 半在框内 半在框外</title>
+<title>手绘波浪文本框</title>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: #ffffff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    body {
+        margin: 0;
+        height: 100vh;
+        background: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  /* 文本框 */
-  .text-box {
-    width: 340px;      /* 可调整 */
-    height: 200px;     /* 可调整 */
-    border: 2px solid black;
-    position: relative;
-    background: white;
-    overflow: visible;  /* 关键：允许内容溢出，否则GIF露不出来 */
-  }
+    /* 外层容器（为了让 GIF 不被裁剪） */
+    .box-wrapper {
+        position: relative;
+        width: 380px;   /* 你可修改宽 */
+        height: 270px;  /* 你可修改高 */
+    }
 
-  /* GIF：一半在框内 一半在框外 */
-  .gif-cross {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 140px;       /* GIF缩小比例，可调整 */
-    bottom: -70px;      /* 这个值 = GIF高度的一半 */
-                        /* 让 GIF 正好跨在底线上 */
-  }
+    /* 手绘波浪框 */
+    .wavy-box {
+        width: 100%;
+        height: 100%;
+        background: #fffdf6;      /* 中间的淡奶油色，可改 */
+        border: 3px dashed #000;  /* 虚线手绘边 */
+        border-radius: 40px;      /* 弯曲程度（越大越圆）*/
+        filter: blur(0.3px);      /* 让线条更柔和 */
+        
+        /* 关键：用 clip-path 做波浪形状 */
+        clip-path: path("M 20 40 
+            Q 80 5, 160 40 
+            T 300 40 
+            Q 360 50, 360 120 
+            T 360 200
+            Q 300 250, 200 230
+            T 20 230
+            Q 5 200, 20 120
+            T 20 40");
+    }
+
+    /* GIF 半进半出效果 */
+    .gif-baby {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;       /* GIF 缩放大小 */
+        bottom: -45px;      /* 控制 GIF 有多少在外面，一半就设为 -GIF高度/2 */
+        pointer-events: none;
+    }
+
 </style>
 </head>
-
 <body>
 
-<div class="text-box">
-  <img src="bear.gif" class="gif-cross">
+<div class="box-wrapper">
+    <div class="wavy-box"></div>
+
+    <!-- 替换成你的 GIF 路径 -->
+    <img src="bear.gif" class="gif-baby">
 </div>
 
 </body>
