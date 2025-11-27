@@ -1,12 +1,11 @@
-/* 禁止滚动条（你的要求） */
+/* 让整个页面居中 & 禁止滚动 */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* ← 不允许上下滚动 */
+  overflow: hidden;
 }
 
-/* 居中整个内容 */
 body {
   display: flex;
   justify-content: center;
@@ -14,14 +13,14 @@ body {
   background: white;
 }
 
-/* 外框大小 */
+/* 框的尺寸（与你给的示例图一致） */
 .frame-wrap {
   position: relative;
   width: 420px;
   height: 300px;
 }
 
-/* 背景框（黑色边框） */
+/* 波浪边框 */
 .cute-frame {
   width: 100%;
   height: 100%;
@@ -44,12 +43,12 @@ body {
   border-radius: 10px;
 }
 
-/* 小熊：缩到示例图真实比例（100px） */
-/* 让它一半压在线上 */
+/* 小熊 — 完全复刻示例图位置与尺寸 */
 .bear-deco {
-  width: 100px;          /* 关键：已缩小到示例图的视觉尺寸 */
+  width: 150px;              /* 示例图中小熊的真实显示大小 */
   position: absolute;
-  bottom: -50px;         /* - 宽度一半（100/2 = 50） */
-  left: 50%;
+  bottom: -75px;             /* 小熊一半压在线上（150/2） */
+
+  left: 42%;                 /* ⭐ 精确还原示例图偏左位置 */
   transform: translateX(-50%);
 }
