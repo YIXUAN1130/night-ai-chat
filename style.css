@@ -34,16 +34,16 @@ body {
           fill=\'white\'/>\
   </svg>') center/100% 100% no-repeat;
 
-  border: 2px dashed rgba(0,0,0,0.4);
+  border: 2px dashed black;
   border-radius: 10px;
 }
 
 /* ✔ 缩小后的熊熊（150px） */
 /* ✔ 一半压在线上 */
 .bear-deco {
-  width: 150px;                 /* 缩小后 */
+  width: 80px;                 /* 缩小后 */
   position: absolute;
-  bottom: -75px;                /* - 宽度的一半（150/2=75） */
+  bottom: -40px;                /* - 宽度的一半（150/2=75） */
   left: 50%;
   transform: translateX(-50%);
 }
