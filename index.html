@@ -14,37 +14,38 @@
   /* 整个“文本框”区域 */
   .card {
     position: relative;
-    width: 360px;
-    height: 220px;
+    width: 380px;      /* 边框宽度，可调 */
+    height: 230px;     /* 边框高度，可调 */
     margin: 80px auto;
   }
 
-  /* 边框 SVG 占满整个 card */
+  /* 边框 SVG */
   .border-svg {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: 1;
   }
 
-  /* 边框线样式：黑色虚线、圆角，类似示例图 */
+  /* 波浪虚线边框：圆润 + 虚线 */
   .border-line {
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 4 4;       /* 虚线间距可以调 */
+    stroke-dasharray: 4 4;   /* 虚线间隔，可调大一点变稀疏 */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* 小熊 GIF：压在底边中间，一半在外面 */
+  /* 小熊 GIF：压在边框底边中间 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 110px;               /* 熊的大小 */
-    bottom: -30px;              /* 探出来的高度，可微调 */
+    width: 110px;           /* 熊大小 */
+    bottom: -30px;          /* 探出来多少，越接近 0 越贴近边框 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -55,36 +56,21 @@
 <body>
 
 <div class="card">
-  <!-- 波浪虚线边框，四条边都弯，形状参考你给的那张图 -->
-  <svg class="border-svg" viewBox="0 0 360 220" preserveAspectRatio="none"
+  <!-- 一条闭合的波浪虚线路，形状参考你给的那张图 -->
+  <svg class="border-svg" viewBox="0 0 380 230" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
-
-    <!-- 顶边：轻微起伏的波浪 -->
     <path class="border-line"
-          d="M60 60
-             Q 110 40 160 60
-             T 260 60
-             T 300 60" />
-
-    <!-- 底边：与顶边呼应、向下鼓一点 -->
-    <path class="border-line"
-          d="M60 160
-             Q 110 180 160 160
-             T 260 160
-             T 300 160" />
-
-    <!-- 左边：向外鼓的一条弯线 -->
-    <path class="border-line"
-          d="M60 60
-             Q 40 110 60 160" />
-
-    <!-- 右边：向外鼓的一条弯线 -->
-    <path class="border-line"
-          d="M300 60
-             Q 320 110 300 160" />
+      d="
+        M 60 50
+        Q 120 25 190 35  T 320 50
+        Q 350 110 325 170
+        Q 260 205 190 195
+        Q 120 205 55 175
+        Q 30 110 60 50
+        Z" />
   </svg>
 
-  <!-- 中间不放文字，只放小熊 -->
+  <!-- 只保留小熊 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
