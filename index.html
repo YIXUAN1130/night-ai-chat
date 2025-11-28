@@ -14,12 +14,12 @@
   /* 整个“文本框”区域 */
   .card {
     position: relative;
-    width: 400px;     /* 整体宽度 */
-    height: 260px;    /* 整体高度 */
+    width: 380px;      /* 整体宽度，可以按需要调 */
+    height: 240px;     /* 整体高度 */
     margin: 80px auto;
   }
 
-  /* 边框 SVG */
+  /* 边框 SVG 占满 card */
   .border-svg {
     position: absolute;
     inset: 0;
@@ -29,12 +29,12 @@
     z-index: 1;
   }
 
-  /* 波浪虚线边框 */
+  /* 波浪虚线边框样式 */
   .border-line {
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 4 4;   /* 虚线间隔，可以改成 5 5 / 6 4 等 */
+    stroke-dasharray: 4 4;      /* 虚线节奏，可以改成 5 5 / 6 4 等 */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -44,8 +44,8 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;           /* 熊的大小 */
-    bottom: -28px;          /* 探出来多少，数值越大越往下 */
+    width: 110px;               /* 熊的大小 */
+    bottom: -28px;              /* 探出来多少，数值越大越往下 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -56,22 +56,33 @@
 <body>
 
 <div class="card">
-  <!-- 一条闭合的波浪虚线，形状更接近参考图的“软矩形” -->
-  <svg class="border-svg" viewBox="0 0 400 260" preserveAspectRatio="none"
+  <!-- 四条边分别画，更接近你发的那张“软矩形”形状 -->
+  <svg class="border-svg" viewBox="0 0 380 240" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
+    <!-- 顶边：稍微起伏 -->
     <path class="border-line"
-      d="
-        M 70 60
-        Q 150 40 230 50
-        Q 310 60 330 80   /* 顶边略微起伏 */
-        Q 360 130 335 190 /* 右边鼓出来 */
-        Q 310 215 230 220
-        Q 150 215 65 195  /* 底边轻微波浪，整体比较平 */
-        Q 40 130 70 60    /* 左边鼓出来 */
-        Z" />
+          d="M 60 70
+             Q 140 50 220 60
+             Q 300 70 320 80" />
+
+    <!-- 右边：向右鼓一点 -->
+    <path class="border-line"
+          d="M 320 80
+             Q 340 130 320 180" />
+
+    <!-- 底边：轻微波浪，稍微往下鼓一点 -->
+    <path class="border-line"
+          d="M 320 180
+             Q 240 195 160 185
+             Q 80 175 60 180" />
+
+    <!-- 左边：向左鼓一点 -->
+    <path class="border-line"
+          d="M 60 180
+             Q 40 130 60 70" />
   </svg>
 
-  <!-- 只保留小熊 -->
+  <!-- 只放小熊 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
