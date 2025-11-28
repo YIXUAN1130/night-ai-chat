@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>GIF 半在框内 半在框外</title>
+<title>弯曲乐谱底边 + 熊熊</title>
 <style>
   body {
     margin: 0;
@@ -12,37 +12,78 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: sans-serif;
   }
 
-  /* 文本框 */
-  .text-box {
-    width: 340px;      /* 可调整 */
-    height: 200px;     /* 可调整 */
-    border: 2px solid black;
+  /* 外层容器，控制整体宽度 */
+  .card {
     position: relative;
-    background: white;
-    overflow: visible;  /* 关键：允许内容溢出，否则GIF露不出来 */
+    width: 340px;   /* 和以前一样 */
   }
 
-  /* GIF：一半在框内 一半在框外 */
+  /* 文本框本体：只保留上、左、右边框 */
+  .text-box {
+    height: 160px;                   /* 高度可以按需要改 */
+    background: #ffffff;
+    border-top: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    box-sizing: border-box;
+    padding: 12px;
+    position: relative;
+    z-index: 1;                      /* 在上层 */
+  }
+
+  /* 乐谱形状的弯曲底边（SVG） */
+  .staff {
+    position: absolute;
+    left: 0;
+    bottom: 0;                       /* 紧贴文本框底部 */
+    width: 100%;
+    height: 70px;                    /* 底边的“乐谱区域”高度 */
+    z-index: 0;
+  }
+
+  /* 熊熊 GIF：一半在框内，一半在外 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 140px;       /* GIF缩小比例，可调整 */
-    bottom: -70px;      /* 这个值 = GIF高度的一半 */
-                        /* 让 GIF 正好跨在底线上 */
+    width: 110px;                    /* 调整大小 */
+    bottom: -40px;                   /* 控制露出多少，可以微调 */
+    z-index: 2;                      /* 在最上层，压在乐谱线上 */
   }
 </style>
 </head>
 
 <body>
 
-<div class="text-box">
-  <img src="bear.gif" class="gif-cross">
+<div class="card">
+  <div class="text-box">
+    这里可以放你的文字内容，<br>
+    上边、左右是直线，<br>
+    底部是乐谱一样的弯曲线条～
+  </div>
+
+  <!-- 弯曲的乐谱形状（5 条起伏的线） -->
+  <svg class="staff" viewBox="0 0 340 60" preserveAspectRatio="none"
+       xmlns="http://www.w3.org/2000/svg">
+    <!-- 每一条 path 是一条略微起伏的线，像五线谱 -->
+    <path d="M0 18 Q 40 5 80 18 T 160 18 T 240 18 T 340 18"
+          fill="none" stroke="black" stroke-width="2" />
+    <path d="M0 24 Q 40 11 80 24 T 160 24 T 240 24 T 340 24"
+          fill="none" stroke="black" stroke-width="2" />
+    <path d="M0 30 Q 40 17 80 30 T 160 30 T 240 30 T 340 30"
+          fill="none" stroke="black" stroke-width="2" />
+    <path d="M0 36 Q 40 23 80 36 T 160 36 T 240 36 T 340 36"
+          fill="none" stroke="black" stroke-width="2" />
+    <path d="M0 42 Q 40 29 80 42 T 160 42 T 240 42 T 340 42"
+          fill="none" stroke="black" stroke-width="2" />
+  </svg>
+
+  <!-- 熊熊 GIF -->
+  <img src="bear.gif" class="gif-cross" />
 </div>
 
 </body>
 </html>
-
-
