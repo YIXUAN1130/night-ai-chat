@@ -11,15 +11,13 @@
     font-family: sans-serif;
   }
 
-  /* 整个“文本框”区域 */
   .card {
     position: relative;
-    width: 420px;      /* 整体宽度 */
-    height: 260px;     /* 整体高度 */
+    width: 420px;
+    height: 260px;
     margin: 80px auto;
   }
 
-  /* 边框 SVG 占满 card */
   .border-svg {
     position: absolute;
     inset: 0;
@@ -29,23 +27,21 @@
     z-index: 1;
   }
 
-  /* 波浪虚线边框样式 */
   .border-line {
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 3 4;      /* 虚线 */
+    stroke-dasharray: 3 4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* 小熊：压在底边中间，一半在外面 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
-    bottom: -26px;              /* 探出来多少，可以微调 */
+    bottom: -26px;
     z-index: 2;
     max-width: none;
     height: auto;
@@ -59,18 +55,14 @@
   <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
     <path class="border-line"
-      d="
-        M 80 70
-        Q 160 55 240 70
-        T 360 70               /* 顶边：轻微波浪 */
-
-        Q 390 135 340 200      /* 右边：向外鼓一点 */
-
-        Q 260 230 180 200
-        T 80 200               /* 底边：中间稍微向下鼓 */
-
-        Q 40 135 80 70         /* 左边：向外鼓一点，回到起点 */
-        Z" />
+      d="M 80 70
+         Q 160 55 240 70
+         T 360 70
+         Q 390 135 340 200
+         Q 260 230 180 200
+         T 80 200
+         Q 40 135 80 70
+         Z" />
   </svg>
 
   <img src="bear.gif" class="gif-cross" />
@@ -78,3 +70,4 @@
 
 </body>
 </html>
+
