@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>1:1 复刻文本框 + GIF</title>
+<title>1:1 文本框 + GIF</title>
 
 <style>
   body {
@@ -15,27 +15,26 @@
     align-items: center;
   }
 
-  /* 外层容器（保持结构不变） */
+  /* 文本框容器 */
   .text-box {
-    width: 450px;   /* 文本框原图宽度（精确） */
-    height: 650px;  /* 文本框原图高度（精确） */
+    width: 463px;      /* 927px 的一半 */
+    height: 766px;     /* 1533px 的一半 */
     position: relative;
     overflow: visible;
-    background-image: url("bg.png"); /* 你的波浪虚线框 */
-    background-size: contain;
+    background-image: url("bg.png");   /* 你的框图 */
+    background-size: 100% 100%;        /* 保证不变形 */
     background-repeat: no-repeat;
     background-position: center;
   }
 
-  /* GIF：严格 1:1 原图大小 + 半入半出效果 */
+  /* GIF：保持原尺寸 260 × 260，并半进半出 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 260px;       /* 你的 GIF 原始宽度 */
-    bottom: -130px;     /* GIF 高度为 260px → 一半 = 130px */
+    width: 260px;       /* 原图宽 */
+    bottom: -130px;     /* 原图高的一半，实现一半在外 */
   }
-
 </style>
 </head>
 
