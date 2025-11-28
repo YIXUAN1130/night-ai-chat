@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>弯曲边框测试</title>
+<title>波浪虚线边框 + 小熊</title>
 <style>
   body {
     margin: 0;
@@ -14,27 +14,37 @@
   /* 整个“文本框”区域 */
   .card {
     position: relative;
-    width: 340px;
-    height: 200px;
-    margin: 120px auto;
+    width: 360px;
+    height: 220px;
+    margin: 80px auto;
   }
 
-  /* 四边都是曲线的边框 */
+  /* 边框 SVG 占满整个 card */
   .border-svg {
     position: absolute;
-    inset: 0;          /* 等价于 top:0; right:0; bottom:0; left:0; */
+    inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
   }
 
-  /* 熊熊 GIF：一半在框内，一半在框外 */
+  /* 边框线样式：黑色虚线、圆角，类似示例图 */
+  .border-line {
+    fill: none;
+    stroke: black;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;       /* 虚线间距可以调 */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* 小熊 GIF：压在底边中间，一半在外面 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;        /* 可以按需要改大小 */
-    bottom: -25px;      /* 控制探出来的高度 */
+    width: 110px;               /* 熊的大小 */
+    bottom: -30px;              /* 探出来的高度，可微调 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -45,38 +55,36 @@
 <body>
 
 <div class="card">
-  <!-- 四条弯曲边框：上、下、左、右 -->
-  <svg class="border-svg" viewBox="0 0 340 200"
-       xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <!-- 波浪虚线边框，四条边都弯，形状参考你给的那张图 -->
+  <svg class="border-svg" viewBox="0 0 360 220" preserveAspectRatio="none"
+       xmlns="http://www.w3.org/2000/svg">
 
-    <!-- 顶部：乐谱一样的多段曲线 -->
-    <path d="M0 40 
-             Q 50 15 100 40 
-             T 200 40 
-             T 340 40"
-          fill="none" stroke="black" stroke-width="2" />
+    <!-- 顶边：轻微起伏的波浪 -->
+    <path class="border-line"
+          d="M60 60
+             Q 110 40 160 60
+             T 260 60
+             T 300 60" />
 
-    <!-- 底部：和上边呼应的曲线 -->
-    <path d="M0 160 
-             Q 50 185 100 160 
-             T 200 160 
-             T 340 160"
-          fill="none" stroke="black" stroke-width="2" />
+    <!-- 底边：与顶边呼应、向下鼓一点 -->
+    <path class="border-line"
+          d="M60 160
+             Q 110 180 160 160
+             T 260 160
+             T 300 160" />
 
-    <!-- 左边：竖直方向的弯曲线 -->
-    <path d="M20 40 
-             Q 0 90 20 140 
-             T 20 160"
-          fill="none" stroke="black" stroke-width="2" />
+    <!-- 左边：向外鼓的一条弯线 -->
+    <path class="border-line"
+          d="M60 60
+             Q 40 110 60 160" />
 
-    <!-- 右边：竖直方向的弯曲线 -->
-    <path d="M320 40 
-             Q 340 90 320 140 
-             T 320 160"
-          fill="none" stroke="black" stroke-width="2" />
+    <!-- 右边：向外鼓的一条弯线 -->
+    <path class="border-line"
+          d="M300 60
+             Q 320 110 300 160" />
   </svg>
 
-  <!-- 只保留小熊，里面没有文字 -->
+  <!-- 中间不放文字，只放小熊 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
