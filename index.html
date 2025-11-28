@@ -14,8 +14,8 @@
   /* 整个“文本框”区域 */
   .card {
     position: relative;
-    width: 380px;      /* 边框宽度，可调 */
-    height: 230px;     /* 边框高度，可调 */
+    width: 400px;     /* 整体宽度 */
+    height: 260px;    /* 整体高度 */
     margin: 80px auto;
   }
 
@@ -29,23 +29,23 @@
     z-index: 1;
   }
 
-  /* 波浪虚线边框：圆润 + 虚线 */
+  /* 波浪虚线边框 */
   .border-line {
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 4 4;   /* 虚线间隔，可调大一点变稀疏 */
+    stroke-dasharray: 4 4;   /* 虚线间隔，可以改成 5 5 / 6 4 等 */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
-  /* 小熊 GIF：压在边框底边中间 */
+  /* 小熊：压在底边中间，一半在外面 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 110px;           /* 熊大小 */
-    bottom: -30px;          /* 探出来多少，越接近 0 越贴近边框 */
+    width: 120px;           /* 熊的大小 */
+    bottom: -28px;          /* 探出来多少，数值越大越往下 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -56,17 +56,18 @@
 <body>
 
 <div class="card">
-  <!-- 一条闭合的波浪虚线路，形状参考你给的那张图 -->
-  <svg class="border-svg" viewBox="0 0 380 230" preserveAspectRatio="none"
+  <!-- 一条闭合的波浪虚线，形状更接近参考图的“软矩形” -->
+  <svg class="border-svg" viewBox="0 0 400 260" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
     <path class="border-line"
       d="
-        M 60 50
-        Q 120 25 190 35  T 320 50
-        Q 350 110 325 170
-        Q 260 205 190 195
-        Q 120 205 55 175
-        Q 30 110 60 50
+        M 70 60
+        Q 150 40 230 50
+        Q 310 60 330 80   /* 顶边略微起伏 */
+        Q 360 130 335 190 /* 右边鼓出来 */
+        Q 310 215 230 220
+        Q 150 215 65 195  /* 底边轻微波浪，整体比较平 */
+        Q 40 130 70 60    /* 左边鼓出来 */
         Z" />
   </svg>
 
