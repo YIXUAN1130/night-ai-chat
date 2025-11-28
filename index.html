@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>乐谱底边测试</title>
+<title>乐谱弯曲测试</title>
 <style>
   body {
     margin: 0;
@@ -15,42 +15,43 @@
   .card {
     position: relative;
     width: 340px;
-    margin: 120px auto; /* 距离顶部一点距离 */
+    margin: 120px auto;
   }
 
-  /* 文本框本体：上、左、右边是直线 */
+  /* 文本框：只有上、左、右边框，没有底边 */
   .text-box {
     height: 160px;
     background: #ffffff;
     border-top: 2px solid black;
     border-left: 2px solid black;
     border-right: 2px solid black;
+    border-bottom: none;          /* 一定要确保底边是关掉的 */
     box-sizing: border-box;
     padding: 12px;
     position: relative;
     z-index: 1;
   }
 
-  /* 乐谱形状的弯曲底边（SVG） */
+  /* 弯曲的乐谱底边（SVG） */
   .staff {
     position: absolute;
     left: 0;
-    bottom: 0;         /* 贴在卡片底部 */
+    bottom: -30px;                /* 整个乐谱往下挪，让它露在框外 */
     width: 100%;
-    height: 70px;
+    height: 100px;                /* 比较高一点，波浪会很明显 */
     z-index: 0;
-    pointer-events: none; /* 防止挡住点击 */
+    pointer-events: none;
   }
 
-  /* 熊熊 GIF：一半在框内，一半在外 */
+  /* 熊熊 GIF：压在乐谱线上 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 110px;
-    bottom: -40px;      /* 这里决定“探出去”多少 */
+    width: 90px;                  /* 稍微缩小一点 */
+    bottom: -35px;                /* 这个值控制“探出来”的程度 */
     z-index: 2;
-    max-width: none;    /* 防止被全局 img{max-width:100%} 影响 */
+    max-width: none;
     height: auto;
   }
 </style>
@@ -61,26 +62,31 @@
 <div class="card">
   <div class="text-box">
     这里是文本内容区域。<br>
-    上、左、右是直线。<br>
+    上、左、右是直线，<br>
     底部是弯曲的乐谱线条。
   </div>
 
-  <!-- 弯曲的乐谱形状（5 条起伏的线） -->
-  <svg class="staff" viewBox="0 0 340 60" preserveAspectRatio="none"
+  <!-- 弯曲的乐谱形状（5 条起伏很明显的线） -->
+  <svg class="staff" viewBox="0 0 340 80" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 18 Q 40 5 80 18 T 160 18 T 240 18 T 340 18"
+    <!-- 上面一条 -->
+    <path d="M0 20 Q 40 0 80 20 T 160 20 T 240 20 T 340 20"
           fill="none" stroke="black" stroke-width="2" />
-    <path d="M0 24 Q 40 11 80 24 T 160 24 T 240 24 T 340 24"
+    <!-- 第二条 -->
+    <path d="M0 30 Q 40 10 80 30 T 160 30 T 240 30 T 340 30"
           fill="none" stroke="black" stroke-width="2" />
-    <path d="M0 30 Q 40 17 80 30 T 160 30 T 240 30 T 340 30"
+    <!-- 中间一条 -->
+    <path d="M0 40 Q 40 20 80 40 T 160 40 T 240 40 T 340 40"
           fill="none" stroke="black" stroke-width="2" />
-    <path d="M0 36 Q 40 23 80 36 T 160 36 T 240 36 T 340 36"
+    <!-- 第四条 -->
+    <path d="M0 50 Q 40 30 80 50 T 160 50 T 240 50 T 340 50"
           fill="none" stroke="black" stroke-width="2" />
-    <path d="M0 42 Q 40 29 80 42 T 160 42 T 240 42 T 340 42"
+    <!-- 最下面一条 -->
+    <path d="M0 60 Q 40 40 80 60 T 160 60 T 240 60 T 340 60"
           fill="none" stroke="black" stroke-width="2" />
   </svg>
 
-  <!-- 记得把 bear.gif 换成你自己的路径 -->
+  <!-- 把 bear.gif 换成你自己的小熊路径 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
