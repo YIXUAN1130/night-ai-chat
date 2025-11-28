@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>乐谱弯曲测试</title>
+<title>弯曲边框测试</title>
 <style>
   body {
     margin: 0;
@@ -11,45 +11,30 @@
     font-family: sans-serif;
   }
 
-  /* 整个卡片居中 */
+  /* 整个“文本框”区域 */
   .card {
     position: relative;
     width: 340px;
+    height: 200px;
     margin: 120px auto;
   }
 
-  /* 文本框：只有上、左、右边框，没有底边 */
-  .text-box {
-    height: 160px;
-    background: #ffffff;
-    border-top: 2px solid black;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    border-bottom: none;          /* 一定要确保底边是关掉的 */
-    box-sizing: border-box;
-    padding: 12px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* 弯曲的乐谱底边（SVG） */
-  .staff {
+  /* 四边都是曲线的边框 */
+  .border-svg {
     position: absolute;
-    left: 0;
-    bottom: -30px;                /* 整个乐谱往下挪，让它露在框外 */
+    inset: 0;          /* 等价于 top:0; right:0; bottom:0; left:0; */
     width: 100%;
-    height: 100px;                /* 比较高一点，波浪会很明显 */
-    z-index: 0;
+    height: 100%;
     pointer-events: none;
   }
 
-  /* 熊熊 GIF：压在乐谱线上 */
+  /* 熊熊 GIF：一半在框内，一半在框外 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;                  /* 稍微缩小一点 */
-    bottom: -35px;                /* 这个值控制“探出来”的程度 */
+    width: 90px;        /* 可以按需要改大小 */
+    bottom: -25px;      /* 控制探出来的高度 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -60,33 +45,38 @@
 <body>
 
 <div class="card">
-  <div class="text-box">
-    这里是文本内容区域。<br>
-    上、左、右是直线，<br>
-    底部是弯曲的乐谱线条。
-  </div>
+  <!-- 四条弯曲边框：上、下、左、右 -->
+  <svg class="border-svg" viewBox="0 0 340 200"
+       xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
 
-  <!-- 弯曲的乐谱形状（5 条起伏很明显的线） -->
-  <svg class="staff" viewBox="0 0 340 80" preserveAspectRatio="none"
-       xmlns="http://www.w3.org/2000/svg">
-    <!-- 上面一条 -->
-    <path d="M0 20 Q 40 0 80 20 T 160 20 T 240 20 T 340 20"
+    <!-- 顶部：乐谱一样的多段曲线 -->
+    <path d="M0 40 
+             Q 50 15 100 40 
+             T 200 40 
+             T 340 40"
           fill="none" stroke="black" stroke-width="2" />
-    <!-- 第二条 -->
-    <path d="M0 30 Q 40 10 80 30 T 160 30 T 240 30 T 340 30"
+
+    <!-- 底部：和上边呼应的曲线 -->
+    <path d="M0 160 
+             Q 50 185 100 160 
+             T 200 160 
+             T 340 160"
           fill="none" stroke="black" stroke-width="2" />
-    <!-- 中间一条 -->
-    <path d="M0 40 Q 40 20 80 40 T 160 40 T 240 40 T 340 40"
+
+    <!-- 左边：竖直方向的弯曲线 -->
+    <path d="M20 40 
+             Q 0 90 20 140 
+             T 20 160"
           fill="none" stroke="black" stroke-width="2" />
-    <!-- 第四条 -->
-    <path d="M0 50 Q 40 30 80 50 T 160 50 T 240 50 T 340 50"
-          fill="none" stroke="black" stroke-width="2" />
-    <!-- 最下面一条 -->
-    <path d="M0 60 Q 40 40 80 60 T 160 60 T 240 60 T 340 60"
+
+    <!-- 右边：竖直方向的弯曲线 -->
+    <path d="M320 40 
+             Q 340 90 320 140 
+             T 320 160"
           fill="none" stroke="black" stroke-width="2" />
   </svg>
 
-  <!-- 把 bear.gif 换成你自己的小熊路径 -->
+  <!-- 只保留小熊，里面没有文字 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
