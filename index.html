@@ -13,8 +13,8 @@
 
   .card {
     position: relative;
-    width: 420px;
-    height: 260px;
+    width: 420px;     /* 边框宽度 */
+    height: 260px;    /* 边框高度 */
     margin: 80px auto;
   }
 
@@ -31,7 +31,7 @@
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 3 4;
+    stroke-dasharray: 3 4;   /* 虚线节奏 */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -41,7 +41,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
-    bottom: -26px;
+    bottom: -24px;          /* 控制小熊探出来的高度 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -54,15 +54,18 @@
 <div class="card">
   <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
+    <!-- 一圈软软的波浪矩形，更接近你发的那张图 -->
     <path class="border-line"
-      d="M 80 70
-         Q 160 55 240 70
-         T 360 70
-         Q 390 135 340 200
-         Q 260 230 180 200
-         T 80 200
-         Q 40 135 80 70
-         Z" />
+      d="
+        M 80 80
+        Q 180 60 340 80      <!-- 顶边：稍微往上拱一点 -->
+
+        Q 380 140 340 200    <!-- 右边：向右鼓出来 -->
+
+        Q 240 220 80 200     <!-- 底边：中间稍低，两边略高 -->
+
+        Q 40 140 80 80       <!-- 左边：向左鼓出来，回到起点 -->
+        Z" />
   </svg>
 
   <img src="bear.gif" class="gif-cross" />
@@ -70,4 +73,3 @@
 
 </body>
 </html>
-
