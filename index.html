@@ -14,7 +14,7 @@
     align-items: center;
   }
 
-  /* 文本框 = 波浪虚线形状 */
+  /* 文本框：已改成波浪虚线形状 */
   .text-box {
     width: 340px;
     height: 200px;
@@ -24,22 +24,22 @@
 
     border: none;
 
-    clip-path: path("M 10 25 
-        Q 40 0, 110 20 
-        T 320 25
-        Q 335 40, 330 110
-        T 320 185
-        Q 260 200, 150 185
-        T 10 175
-        Q 0 140, 10 100
-        T 10 25");
+    clip-path: path("M 15 30 
+        Q 60 0, 140 25 
+        T 310 30
+        Q 330 45, 325 110
+        T 310 175
+        Q 240 200, 160 175
+        T 15 165
+        Q 0 130, 15 90
+        T 15 30");
 
     outline: 2px dashed black;
     outline-offset: -2px;
-    border-radius: 20px;
+    border-radius: 25px;
   }
 
-  /* GIF 保持原样 */
+  /* GIF 保持完全不动 */
   .gif-cross {
     position: absolute;
     left: 50%;
@@ -49,11 +49,13 @@
   }
 </style>
 </head>
+
 <body>
 
 <div class="text-box">
-  <img src="bear.gif" class="gif-cross">
+  <img src="bear.gif" class="gif-cross"> 
 </div>
 
 </body>
 </html>
+
