@@ -15,7 +15,7 @@
   .card {
     position: relative;
     width: 420px;      /* 整体宽度 */
-    height: 280px;     /* 整体高度，比之前稍大一点，更接近原图比例 */
+    height: 260px;     /* 整体高度 */
     margin: 80px auto;
   }
 
@@ -34,7 +34,7 @@
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 3 4;      /* 虚线更细、更像原图 */
+    stroke-dasharray: 3 4;      /* 虚线 */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -44,8 +44,8 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;               /* 熊的大小，可以按需要调 */
-    bottom: -30px;              /* 探出来多少，数值越大越往下 */
+    width: 120px;
+    bottom: -26px;              /* 探出来多少，可以微调 */
     z-index: 2;
     max-width: none;
     height: auto;
@@ -56,23 +56,23 @@
 <body>
 
 <div class="card">
-  <!-- 一条闭合的波浪虚线，更接近你发的那张软矩形边框 -->
-  <svg class="border-svg" viewBox="0 0 420 280" preserveAspectRatio="none"
+  <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
     <path class="border-line"
       d="
         M 80 70
-        Q 160 35 240 50
-        Q 320 65 350 85
-        Q 380 140 355 210
-        Q 300 245 240 250
-        Q 180 255 80 235
-        Q 40 160 65 95
-        Q 75 80 80 70
+        Q 160 55 240 70
+        T 360 70               /* 顶边：轻微波浪 */
+
+        Q 390 135 340 200      /* 右边：向外鼓一点 */
+
+        Q 260 230 180 200
+        T 80 200               /* 底边：中间稍微向下鼓 */
+
+        Q 40 135 80 70         /* 左边：向外鼓一点，回到起点 */
         Z" />
   </svg>
 
-  <!-- 只放小熊 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
