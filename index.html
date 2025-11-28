@@ -2,46 +2,57 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>1:1 文本框 + GIF</title>
-
+<title>GIF 半在框内 半在框外</title>
 <style>
   body {
     margin: 0;
     padding: 0;
-    height: 100vh;
     background: #ffffff;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
-  /* 文本框容器 */
+  /* 文本框 = 波浪虚线形状 */
   .text-box {
-    width: 463px;      /* 927px 的一半 */
-    height: 766px;     /* 1533px 的一半 */
+    width: 340px;
+    height: 200px;
     position: relative;
     overflow: visible;
-    background-image: url("bg.png");   /* 你的框图 */
-    background-size: 100% 100%;        /* 保证不变形 */
-    background-repeat: no-repeat;
-    background-position: center;
+    background: #fffdf6;
+
+    border: none;
+
+    clip-path: path("M 10 25 
+        Q 40 0, 110 20 
+        T 320 25
+        Q 335 40, 330 110
+        T 320 185
+        Q 260 200, 150 185
+        T 10 175
+        Q 0 140, 10 100
+        T 10 25");
+
+    outline: 2px dashed black;
+    outline-offset: -2px;
+    border-radius: 20px;
   }
 
-  /* GIF：保持原尺寸 260 × 260，并半进半出 */
+  /* GIF 保持原样 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 260px;       /* 原图宽 */
-    bottom: -130px;     /* 原图高的一半，实现一半在外 */
+    width: 140px;
+    bottom: -70px;
   }
 </style>
 </head>
-
 <body>
 
 <div class="text-box">
-  <img src="bear.gif" class="gif-cross">
+  <img src="your.gif" class="gif-cross">
 </div>
 
 </body>
