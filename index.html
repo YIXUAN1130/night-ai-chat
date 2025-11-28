@@ -14,38 +14,24 @@
     align-items: center;
   }
 
-  /* 文本框：已改成波浪虚线形状 */
+  /* 文本框 */
   .text-box {
-    width: 340px;
-    height: 200px;
+    width: 340px;      /* 可调整 */
+    height: 200px;     /* 可调整 */
+    border: 2px solid black;
     position: relative;
-    overflow: visible;
-    background: #fffdf6;
-
-    border: none;
-
-    clip-path: path("M 15 30 
-        Q 60 0, 140 25 
-        T 310 30
-        Q 330 45, 325 110
-        T 310 175
-        Q 240 200, 160 175
-        T 15 165
-        Q 0 130, 15 90
-        T 15 30");
-
-    outline: 2px dashed black;
-    outline-offset: -2px;
-    border-radius: 25px;
+    background: white;
+    overflow: visible;  /* 关键：允许内容溢出，否则GIF露不出来 */
   }
 
-  /* GIF 保持完全不动 */
+  /* GIF：一半在框内 一半在框外 */
   .gif-cross {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 140px;
-    bottom: -70px;
+    width: 140px;       /* GIF缩小比例，可调整 */
+    bottom: -70px;      /* 这个值 = GIF高度的一半 */
+                        /* 让 GIF 正好跨在底线上 */
   }
 </style>
 </head>
@@ -53,9 +39,10 @@
 <body>
 
 <div class="text-box">
-  <img src="bear.gif" class="gif-cross"> 
+  <img src="your.gif" class="gif-cross">
 </div>
 
 </body>
 </html>
+
 
