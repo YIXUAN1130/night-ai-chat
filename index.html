@@ -2,28 +2,25 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>弯曲乐谱底边 + 熊熊</title>
+<title>乐谱底边测试</title>
 <style>
   body {
     margin: 0;
     padding: 0;
     background: #ffffff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: sans-serif;
   }
 
-  /* 外层容器，控制整体宽度 */
+  /* 整个卡片居中 */
   .card {
     position: relative;
-    width: 340px;   /* 和以前一样 */
+    width: 340px;
+    margin: 120px auto; /* 距离顶部一点距离 */
   }
 
-  /* 文本框本体：只保留上、左、右边框 */
+  /* 文本框本体：上、左、右边是直线 */
   .text-box {
-    height: 160px;                   /* 高度可以按需要改 */
+    height: 160px;
     background: #ffffff;
     border-top: 2px solid black;
     border-left: 2px solid black;
@@ -31,17 +28,18 @@
     box-sizing: border-box;
     padding: 12px;
     position: relative;
-    z-index: 1;                      /* 在上层 */
+    z-index: 1;
   }
 
   /* 乐谱形状的弯曲底边（SVG） */
   .staff {
     position: absolute;
     left: 0;
-    bottom: 0;                       /* 紧贴文本框底部 */
+    bottom: 0;         /* 贴在卡片底部 */
     width: 100%;
-    height: 70px;                    /* 底边的“乐谱区域”高度 */
+    height: 70px;
     z-index: 0;
+    pointer-events: none; /* 防止挡住点击 */
   }
 
   /* 熊熊 GIF：一半在框内，一半在外 */
@@ -49,9 +47,11 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 110px;                    /* 调整大小 */
-    bottom: -40px;                   /* 控制露出多少，可以微调 */
-    z-index: 2;                      /* 在最上层，压在乐谱线上 */
+    width: 110px;
+    bottom: -40px;      /* 这里决定“探出去”多少 */
+    z-index: 2;
+    max-width: none;    /* 防止被全局 img{max-width:100%} 影响 */
+    height: auto;
   }
 </style>
 </head>
@@ -60,15 +60,14 @@
 
 <div class="card">
   <div class="text-box">
-    这里可以放你的文字内容，<br>
-    上边、左右是直线，<br>
-    底部是乐谱一样的弯曲线条～
+    这里是文本内容区域。<br>
+    上、左、右是直线。<br>
+    底部是弯曲的乐谱线条。
   </div>
 
   <!-- 弯曲的乐谱形状（5 条起伏的线） -->
   <svg class="staff" viewBox="0 0 340 60" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
-    <!-- 每一条 path 是一条略微起伏的线，像五线谱 -->
     <path d="M0 18 Q 40 5 80 18 T 160 18 T 240 18 T 340 18"
           fill="none" stroke="black" stroke-width="2" />
     <path d="M0 24 Q 40 11 80 24 T 160 24 T 240 24 T 340 24"
@@ -81,7 +80,7 @@
           fill="none" stroke="black" stroke-width="2" />
   </svg>
 
-  <!-- 熊熊 GIF -->
+  <!-- 记得把 bear.gif 换成你自己的路径 -->
   <img src="bear.gif" class="gif-cross" />
 </div>
 
