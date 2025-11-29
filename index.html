@@ -20,10 +20,10 @@
     /* 文本框 + 边框 + 小熊 整体容器 */
     .card {
       position: relative;
-      display: inline-block;   /* ✅ 宽度由内容决定 */
-      padding: 28px 40px 38px; /* 上/左右/下 内边距，给文字留空间 */
+      display: inline-block;   /* 宽度由内容决定 */
+      padding: 28px 40px 38px; /* 上/左右/下 内边距 */
       margin: 0;
-      transform: translateY(-20px);  /* 视觉稍微往上提一点 */
+      transform: translateY(-20px);
     }
 
     /* 文字区域 */
@@ -31,8 +31,7 @@
       position: relative;
       z-index: 2;
       text-align: center;
-      white-space: nowrap;     /* ✅ 一行展示，让宽度完全跟文字走
-                                  想要自动换行就删掉这一行 */
+      white-space: nowrap;     /* 一行展示，宽度完全跟文字走 */
       font-size: 18px;
     }
 
@@ -50,7 +49,7 @@
       fill: none;
       stroke: black;
       stroke-width: 2;
-      stroke-dasharray: 3 4;   /* 虚线节奏 */
+      stroke-dasharray: 3 4;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -61,7 +60,7 @@
       left: 50%;
       transform: translateX(-50%);
       width: 120px;
-      bottom: -14px;          /* 数值越小越往上，越大越往下 */
+      bottom: -14px;
       z-index: 3;
       max-width: none;
       height: auto;
@@ -72,43 +71,49 @@
 <body>
 
   <div class="card">
-    <!-- 文字内容：直接改这里就会带动宽度变化 -->
+    <!-- 想写什么就改这里，框会跟着变长/变短 -->
     <div class="card-text">
       这里是测试文字，可以随便换成你想写的内容～
     </div>
 
-    <!-- 波浪虚线边框：viewBox 固定，随 card 自动缩放 -->
+    <!-- 波浪虚线边框 -->
     <svg class="border-svg" viewBox="0 0 100 40" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
 
-      <!-- 顶边：3 个起伏（上-下-上） -->
+      <!-- 顶边：3 个起伏 -->
       <path class="border-line"
         d="M 5 8
            Q 20 4 35 8
            Q 50 12 65 8
            Q 80 4 95 8" />
 
-      <!-- 右边：3 个起伏，从上到下向右鼓 -->
+      <!-- 右边：5 个起伏（从上到下） -->
       <path class="border-line"
         d="M 95 8
-           Q 99 16 95 24
-           Q 91 30 95 36" />
+           Q 99 10 95 12
+           Q 91 16 95 20
+           Q 99 24 95 28
+           Q 91 32 95 34
+           Q 99 36 95 38" />
 
-      <!-- 底边：3 个起伏（下-上-下），中间略低一点，给小熊“窝” -->
+      <!-- 底边：3 个起伏，中间略低一点 -->
       <path class="border-line"
-        d="M 95 36
-           Q 80 34 65 36
-           Q 50 38 35 36
-           Q 20 34 5 36" />
+        d="M 95 38
+           Q 80 36 65 38
+           Q 50 40 35 38
+           Q 20 36 5 38" />
 
-      <!-- 左边：3 个起伏，从下到上向左鼓 -->
+      <!-- 左边：5 个起伏（从下到上），与右边镜像 -->
       <path class="border-line"
-        d="M 5 36
-           Q 1 28 5 24
-           Q 9 18 5 8" />
+        d="M 5 38
+           Q 1 36 5 34
+           Q 9 30 5 26
+           Q 1 22 5 18
+           Q 9 14 5 12
+           Q 1 10 5 8" />
     </svg>
 
-    <!-- 小熊图片，bear.gif 放在同一目录下 -->
+    <!-- bear.gif 和这个 html 放在同一目录下 -->
     <img src="bear.gif" class="gif-cross" alt="bear">
   </div>
 
