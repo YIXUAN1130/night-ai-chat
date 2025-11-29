@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>波浪虚线边框 + 小熊</title>
   <style>
-    /* 整个页面：把内容居中 */
+    /* 让整体居中 */
     body {
       margin: 0;
       padding: 0;
@@ -12,22 +12,20 @@
       font-family: sans-serif;
 
       display: flex;
-      justify-content: center;   /* 水平居中 */
-      align-items: center;       /* 垂直居中 */
-      min-height: 100vh;         /* 占满视口高度 */
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
 
-    /* 文本框 + 小熊整体 */
+    /* 文本框 + 小熊整体容器 */
     .card {
       position: relative;
-      width: 420px;   /* 文本框整体宽度 */
-      height: 260px;  /* 文本框整体高度 */
+      width: 420px;   /* 外框宽度 */
+      height: 260px;  /* 外框高度 */
       margin: 0;
-      /* 往上稍微抬一点，让视觉中心更居中 */
-      transform: translateY(-30px);
+      transform: translateY(-30px); /* 视觉上稍微往上提一点 */
     }
 
-    /* SVG 边框铺满整个 card */
     .border-svg {
       position: absolute;
       inset: 0;
@@ -37,7 +35,6 @@
       z-index: 1;
     }
 
-    /* 波浪虚线边框样式 */
     .border-line {
       fill: none;
       stroke: black;
@@ -52,8 +49,8 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      width: 120px;          /* 熊的大小，可自行改 */
-      bottom: -24px;         /* 探出来多少，可调 */
+      width: 120px;          /* 熊的大小可调 */
+      bottom: -60px;         /* 探出来多少可调 */
       z-index: 2;
       max-width: none;
       height: auto;
@@ -64,37 +61,39 @@
 <body>
 
   <div class="card">
-    <!-- 四边波浪虚线框 -->
     <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
 
-      <!-- 顶边：轻微波浪 -->
+      <!-- 顶边：3 个起伏 -->
       <path class="border-line"
             d="M 80 80
-               Q 180 60 260 80
-               T 340 80" />
+               Q 120 70 160 80
+               Q 200 90 240 80
+               Q 280 70 320 80" />
 
-      <!-- 右边：向右鼓一点 -->
+      <!-- 右边：3 个起伏，从上到下 -->
       <path class="border-line"
-            d="M 340 80
-               Q 360 140 340 200" />
+            d="M 320 80
+               Q 330 110 320 140
+               Q 310 170 320 200" />
 
-      <!-- 底边：中间稍微往下鼓，小熊压在这一段上 -->
-      <path class="border-line"
-            d="M 340 200
-               Q 260 220 180 200
-               T 80 200" />
-
-      <!-- 左边：向左鼓一点，接回到顶边起点 -->
+      <!-- 底边：3 个起伏，从左到右，中间稍微往下鼓一点 -->
       <path class="border-line"
             d="M 80 200
-               Q 60 140 80 80" />
+               Q 120 210 160 200
+               Q 200 190 240 200
+               Q 280 210 320 200" />
+
+      <!-- 左边：3 个起伏，从下到上（和右边镜像） -->
+      <path class="border-line"
+            d="M 80 200
+               Q 70 170 80 140
+               Q 90 110 80 80" />
     </svg>
 
-    <!-- 小熊图片，bear.gif 放在同一目录下 -->
+    <!-- bear.gif 和这个 html 放在同一目录下 -->
     <img src="bear.gif" class="gif-cross" alt="bear">
   </div>
 
 </body>
 </html>
-
