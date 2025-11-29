@@ -1,84 +1,100 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<title>波浪虚线边框 + 小熊</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: #ffffff;
-    font-family: sans-serif;
+  <meta charset="UTF-8">
+  <title>波浪虚线边框 + 小熊</title>
+  <style>
+    /* 整个页面：把内容居中 */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: sans-serif;
 
-    /* ★ 关键：让内容在页面正中间 ★ */
-    display: flex;
-    justify-content: center;  /* 水平居中 */
-    align-items: center;      /* 垂直居中 */
-    height: 100vh;            /* 占满整个视口高度 */
-  }
+      display: flex;
+      justify-content: center;   /* 水平居中 */
+      align-items: center;       /* 垂直居中 */
+      min-height: 100vh;         /* 占满视口高度 */
+    }
 
-  .card {
-    position: relative;
-    width: 420px;
-    height: 260px;
-    /* 原来的 margin: 80px auto; 去掉 */
-    margin: 0;
-  }
+    /* 文本框 + 小熊整体 */
+    .card {
+      position: relative;
+      width: 420px;   /* 文本框整体宽度 */
+      height: 260px;  /* 文本框整体高度 */
+      margin: 0;
+      /* 往上稍微抬一点，让视觉中心更居中 */
+      transform: translateY(-30px);
+    }
 
-  .border-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-  }
+    /* SVG 边框铺满整个 card */
+    .border-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-  .border-line {
-    fill: none;
-    stroke: black;
-    stroke-width: 2;
-    stroke-dasharray: 3 4;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
+    /* 波浪虚线边框样式 */
+    .border-line {
+      fill: none;
+      stroke: black;
+      stroke-width: 2;
+      stroke-dasharray: 3 4;   /* 虚线节奏 */
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-  .gif-cross {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    bottom: -24px;
-    z-index: 2;
-    max-width: none;
-    height: auto;
-  }
-</style>
+    /* 小熊 GIF：压在底边中间，一半在外面 */
+    .gif-cross {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;          /* 熊的大小，可自行改 */
+      bottom: -24px;         /* 探出来多少，可调 */
+      z-index: 2;
+      max-width: none;
+      height: auto;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="card">
-  <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
-       xmlns="http://www.w3.org/2000/svg">
-    <path class="border-line"
-          d="M 80 80
-             Q 180 60 260 80
-             T 340 80" />
-    <path class="border-line"
-          d="M 340 80
-             Q 360 140 340 200" />
-    <path class="border-line"
-          d="M 340 200
-             Q 260 220 180 200
-             T 80 200" />
-    <path class="border-line"
-          d="M 80 200
-             Q 60 140 80 80" />
-  </svg>
+  <div class="card">
+    <!-- 四边波浪虚线框 -->
+    <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
+         xmlns="http://www.w3.org/2000/svg">
 
-  <img src="bear.gif" class="gif-cross" />
-</div>
+      <!-- 顶边：轻微波浪 -->
+      <path class="border-line"
+            d="M 80 80
+               Q 180 60 260 80
+               T 340 80" />
+
+      <!-- 右边：向右鼓一点 -->
+      <path class="border-line"
+            d="M 340 80
+               Q 360 140 340 200" />
+
+      <!-- 底边：中间稍微往下鼓，小熊压在这一段上 -->
+      <path class="border-line"
+            d="M 340 200
+               Q 260 220 180 200
+               T 80 200" />
+
+      <!-- 左边：向左鼓一点，接回到顶边起点 -->
+      <path class="border-line"
+            d="M 80 200
+               Q 60 140 80 80" />
+    </svg>
+
+    <!-- 小熊图片，bear.gif 放在同一目录下 -->
+    <img src="bear.gif" class="gif-cross" alt="bear">
+  </div>
 
 </body>
 </html>
+
