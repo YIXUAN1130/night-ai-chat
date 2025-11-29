@@ -21,7 +21,7 @@
       width: 420px;   /* 外框宽度 */
       height: 260px;  /* 外框高度 */
       margin: 0;
-      transform: translateY(-20px);  /* 视觉上稍微往上提一点 */
+      transform: translateY(-20px);  /* 视觉稍微往上提一点 */
     }
 
     .border-svg {
@@ -37,18 +37,18 @@
       fill: none;
       stroke: black;
       stroke-width: 2;
-      stroke-dasharray: 3 4;   /* 虚线节奏 */
+      stroke-dasharray: 3 4;   /* 虚线 */
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    /* 小熊：大约一半在框内、一半在外 */
+    /* 小熊：大约半进半出 */
     .gif-cross {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       width: 120px;
-      bottom: -10px;       /* 想多露一点就改成 -14 / -16 等 */
+      bottom: -10px;       /* 想多露一点可以改成 -14 / -16 */
       z-index: 2;
       max-width: none;
       height: auto;
@@ -62,31 +62,27 @@
     <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
 
-      <!-- 顶边：3 个起伏，幅度更接近参考图 -->
+      <!-- 顶边：起伏比较轻，整体偏平 -->
       <path class="border-line"
-            d="M 80 80
-               Q 120 65 160 80
-               Q 200 95 240 80
-               Q 280 65 320 80" />
+            d="M 80 90
+               Q 140 75 210 85
+               Q 280 95 340 90" />
 
-      <!-- 右边：整体向右鼓，带 3 段起伏 -->
+      <!-- 右边：中段稍微鼓出，整体比较顺 -->
       <path class="border-line"
-            d="M 320 80
-               Q 355 120 340 150
-               Q 325 180 320 200" />
+            d="M 340 90
+               Q 360 140 340 210" />
 
-      <!-- 底边：3 个起伏，中间略微下垂，给小熊一个“窝” -->
+      <!-- 底边：中间略低，两边略高，整体比较圆润 -->
       <path class="border-line"
-            d="M 320 200
-               Q 280 215 240 200
-               Q 200 185 160 200
-               Q 120 215 80 200" />
+            d="M 340 210
+               Q 280 225 210 215
+               Q 140 205 80 210" />
 
-      <!-- 左边：与右边大致镜像，同样向外鼓、3 段起伏 -->
+      <!-- 左边：和右边镜像，中段鼓出 -->
       <path class="border-line"
-            d="M 80 200
-               Q 45 160 60 130
-               Q 75 100 80 80" />
+            d="M 80 210
+               Q 60 140 80 90" />
     </svg>
 
     <!-- bear.gif 和这个 html 放在同一目录下 -->
