@@ -2,8 +2,9 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>波浪虚线边框 + 小熊</title>
+  <title>随文字伸缩的波浪虚线边框 + 小熊</title>
   <style>
+    /* 整个页面居中 */
     body {
       margin: 0;
       padding: 0;
@@ -16,14 +17,26 @@
       min-height: 100vh;
     }
 
+    /* 文本框 + 边框 + 小熊 整体容器 */
     .card {
       position: relative;
-      width: 420px;
-      height: 260px;
+      display: inline-block;   /* ✅ 宽度由内容决定 */
+      padding: 28px 40px 38px; /* 上/左右/下 内边距，给文字留空间 */
       margin: 0;
-      transform: translateY(-20px);  /* 视觉上稍微往上提一点 */
+      transform: translateY(-20px);  /* 视觉稍微往上提一点 */
     }
 
+    /* 文字区域 */
+    .card-text {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      white-space: nowrap;     /* ✅ 一行展示，让宽度完全跟文字走
+                                  想要自动换行就删掉这一行 */
+      font-size: 18px;
+    }
+
+    /* SVG 边框铺满整个 card 外框 */
     .border-svg {
       position: absolute;
       inset: 0;
@@ -37,19 +50,19 @@
       fill: none;
       stroke: black;
       stroke-width: 2;
-      stroke-dasharray: 3 4;   /* 虚线 */
+      stroke-dasharray: 3 4;   /* 虚线节奏 */
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    /* 小熊：大约半进半出 */
+    /* 小熊：大约半进半出，始终在底边中间 */
     .gif-cross {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       width: 120px;
-      bottom: -10px;       /* 想多露一点可以改成 -14 / -16 */
-      z-index: 2;
+      bottom: -14px;          /* 数值越小越往上，越大越往下 */
+      z-index: 3;
       max-width: none;
       height: auto;
     }
@@ -59,39 +72,43 @@
 <body>
 
   <div class="card">
-    <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
+    <!-- 文字内容：直接改这里就会带动宽度变化 -->
+    <div class="card-text">
+      这里是测试文字，可以随便换成你想写的内容～
+    </div>
+
+    <!-- 波浪虚线边框：viewBox 固定，随 card 自动缩放 -->
+    <svg class="border-svg" viewBox="0 0 100 40" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
 
-      <!-- 顶边：3 段起伏（上-下-上），整体比较平 -->
+      <!-- 顶边：3 个起伏（上-下-上） -->
       <path class="border-line"
-            d="M 80 95
-               Q 125 85 170 95
-               Q 215 105 260 95
-               Q 305 85 340 95" />
+        d="M 5 8
+           Q 20 4 35 8
+           Q 50 12 65 8
+           Q 80 4 95 8" />
 
-      <!-- 右边：3 段起伏，从上到下向右鼓 -->
+      <!-- 右边：3 个起伏，从上到下向右鼓 -->
       <path class="border-line"
-            d="M 340 95
-               Q 350 120 340 145
-               Q 330 170 340 195
-               Q 350 210 340 225" />
+        d="M 95 8
+           Q 99 16 95 24
+           Q 91 30 95 36" />
 
-      <!-- 底边：3 段起伏（下-上-下），中间稍微低一点，给小熊“窝” -->
+      <!-- 底边：3 个起伏（下-上-下），中间略低一点，给小熊“窝” -->
       <path class="border-line"
-            d="M 340 225
-               Q 295 235 250 225
-               Q 205 215 160 225
-               Q 115 235 80 225" />
+        d="M 95 36
+           Q 80 34 65 36
+           Q 50 38 35 36
+           Q 20 34 5 36" />
 
-      <!-- 左边：3 段起伏，从下到上向左鼓（大致镜像右边） -->
+      <!-- 左边：3 个起伏，从下到上向左鼓 -->
       <path class="border-line"
-            d="M 80 225
-               Q 70 200 80 175
-               Q 90 150 80 125
-               Q 70 110 80 95" />
+        d="M 5 36
+           Q 1 28 5 24
+           Q 9 18 5 8" />
     </svg>
 
-    <!-- bear.gif 和这个 html 放在同一目录下 -->
+    <!-- 小熊图片，bear.gif 放在同一目录下 -->
     <img src="bear.gif" class="gif-cross" alt="bear">
   </div>
 
