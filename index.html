@@ -9,13 +9,20 @@
     padding: 0;
     background: #ffffff;
     font-family: sans-serif;
+
+    /* ★ 关键：让内容在页面正中间 ★ */
+    display: flex;
+    justify-content: center;  /* 水平居中 */
+    align-items: center;      /* 垂直居中 */
+    height: 100vh;            /* 占满整个视口高度 */
   }
 
   .card {
     position: relative;
-    width: 420px;     /* 边框整体宽度 */
-    height: 260px;    /* 边框整体高度 */
-    margin: 80px auto;
+    width: 420px;
+    height: 260px;
+    /* 原来的 margin: 80px auto; 去掉 */
+    margin: 0;
   }
 
   .border-svg {
@@ -31,7 +38,7 @@
     fill: none;
     stroke: black;
     stroke-width: 2;
-    stroke-dasharray: 3 4;   /* 虚线节奏 */
+    stroke-dasharray: 3 4;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -40,8 +47,8 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 120px;           /* 熊的大小 */
-    bottom: -24px;          /* 熊探出来的高度 */
+    width: 120px;
+    bottom: -24px;
     z-index: 2;
     max-width: none;
     height: auto;
@@ -54,25 +61,17 @@
 <div class="card">
   <svg class="border-svg" viewBox="0 0 420 260" preserveAspectRatio="none"
        xmlns="http://www.w3.org/2000/svg">
-
-    <!-- 顶边：轻微波浪 -->
     <path class="border-line"
           d="M 80 80
              Q 180 60 260 80
              T 340 80" />
-
-    <!-- 右边：向右鼓出来 -->
     <path class="border-line"
           d="M 340 80
              Q 360 140 340 200" />
-
-    <!-- 底边：中间稍微往下鼓 -->
     <path class="border-line"
           d="M 340 200
              Q 260 220 180 200
              T 80 200" />
-
-    <!-- 左边：向左鼓出来 -->
     <path class="border-line"
           d="M 80 200
              Q 60 140 80 80" />
