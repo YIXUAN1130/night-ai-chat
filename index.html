@@ -20,9 +20,11 @@
     /* 文本框 + 边框 + 小熊 整体容器 */
     .card {
       position: relative;
-      display: inline-block;   /* 宽度由内容决定 */
-      padding: 28px 40px 38px; /* 上/左右/下 内边距 */
-      margin: 0;
+      display: inline-flex;     /* 宽度由内容决定，高度固定 */
+      align-items: center;      /* 文本垂直居中 */
+      justify-content: center;  /* 文本水平居中 */
+      padding: 0 40px;          /* 左右内边距，控制文字与边框的水平距离 */
+      height: 200px;            /* ✅ 固定高度，接近你最开始那版 */
       transform: translateY(-20px);
     }
 
@@ -31,7 +33,7 @@
       position: relative;
       z-index: 2;
       text-align: center;
-      white-space: nowrap;     /* 一行展示，宽度完全跟文字走 */
+      white-space: nowrap;      /* 一行显示，只横向变长 */
       font-size: 18px;
     }
 
@@ -48,10 +50,11 @@
     .border-line {
       fill: none;
       stroke: black;
-      stroke-width: 2;
+      stroke-width: 2;              /* 虚线粗细固定 */
       stroke-dasharray: 3 4;
       stroke-linecap: round;
       stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;  /* ✅ 缩放时线宽不变 */
     }
 
     /* 小熊：大约半进半出，始终在底边中间 */
@@ -60,7 +63,7 @@
       left: 50%;
       transform: translateX(-50%);
       width: 120px;
-      bottom: -14px;
+      bottom: -16px;          /* 数值越小越贴近边框，越大越往下 */
       z-index: 3;
       max-width: none;
       height: auto;
@@ -71,46 +74,46 @@
 <body>
 
   <div class="card">
-    <!-- 想写什么就改这里，框会跟着变长/变短 -->
+    <!-- 想写什么就改这里，框只会左右变长/变短 -->
     <div class="card-text">
-      这里是测试文字，可以随便换成你想写的内容～
+      这里是测试文字，或你想写的内容～
     </div>
 
-    <!-- 波浪虚线边框 -->
-    <svg class="border-svg" viewBox="0 0 100 40" preserveAspectRatio="none"
+    <!-- 波浪虚线边框，高度固定，宽度随 card 改变 -->
+    <svg class="border-svg" viewBox="0 0 100 50" preserveAspectRatio="none"
          xmlns="http://www.w3.org/2000/svg">
 
-      <!-- 顶边：3 个起伏 -->
+      <!-- 顶边：3 个柔和起伏 -->
       <path class="border-line"
-        d="M 5 8
-           Q 20 4 35 8
-           Q 50 12 65 8
-           Q 80 4 95 8" />
+        d="M 5 12
+           Q 25 8 45 12
+           Q 65 16 85 12
+           Q 95 10 95 12" />
 
-      <!-- 右边：5 个起伏（从上到下） -->
+      <!-- 右边：5 个小起伏，从上到下向右鼓 -->
       <path class="border-line"
-        d="M 95 8
-           Q 99 10 95 12
-           Q 91 16 95 20
-           Q 99 24 95 28
-           Q 91 32 95 34
-           Q 99 36 95 38" />
+        d="M 95 12
+           Q 99 14 95 16
+           Q 91 20 95 24
+           Q 99 28 95 32
+           Q 91 36 95 38
+           Q 99 40 95 44" />
 
-      <!-- 底边：3 个起伏，中间略低一点 -->
+      <!-- 底边：3 个起伏，中间略低，给小熊“窝” -->
       <path class="border-line"
-        d="M 95 38
-           Q 80 36 65 38
-           Q 50 40 35 38
-           Q 20 36 5 38" />
+        d="M 95 44
+           Q 75 42 55 44
+           Q 50 46 45 44
+           Q 25 42 5 44" />
 
-      <!-- 左边：5 个起伏（从下到上），与右边镜像 -->
+      <!-- 左边：5 个小起伏，从下到上向左鼓（镜像右边） -->
       <path class="border-line"
-        d="M 5 38
-           Q 1 36 5 34
-           Q 9 30 5 26
-           Q 1 22 5 18
-           Q 9 14 5 12
-           Q 1 10 5 8" />
+        d="M 5 44
+           Q 1 42 5 40
+           Q 9 36 5 32
+           Q 1 28 5 24
+           Q 9 20 5 16
+           Q 1 14 5 12" />
     </svg>
 
     <!-- bear.gif 和这个 html 放在同一目录下 -->
