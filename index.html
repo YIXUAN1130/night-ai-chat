@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>随文字伸缩的波浪虚线边框 + 小熊</title>
+  <title>随文字伸缩的波浪虚线边框 + 小熊 + 星星坠落背景</title>
   <style>
     /* 整个页面居中 */
     body {
@@ -15,6 +15,19 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      position: relative; /* 为了让内容在 canvas 之上 */
+      overflow: hidden;   /* 防止星星滚动条 */
+    }
+
+    /* 星星背景画布 */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;  /* 在所有内容后面 */
+      pointer-events: none;
     }
 
     /* 文本框 + 边框 + 小熊 整体容器 */
@@ -26,6 +39,7 @@
       padding: 0 40px;          /* 左右内边距：文字与边框左右距离 */
       height: 240px;            /* ✅ 上下间距比之前更大 */
       transform: translateY(-20px);
+      z-index: 10;              /* 确保在星星前面 */
     }
 
     /* 文字区域 */
@@ -72,6 +86,9 @@
 </head>
 
 <body>
+
+  <!-- ⭐ 星星坠落背景画布 -->
+  <canvas id="starCanvas"></canvas>
 
   <div class="card">
     <!-- 想写什么就改这里：只会左右变长/变短 -->
@@ -124,5 +141,76 @@
     <img src="bear.gif" class="gif-cross" alt="bear">
   </div>
 
+  <!-- ⭐ 星星坠落效果脚本 -->
+  <script>
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // 生成星星
+    const stars = [];
+    const STAR_COUNT = 90;  // 星星数量，可调大/调小
+
+    function createStar() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.6 + 0.4,      // 星星大小
+        speedY: Math.random() * 1.5 + 0.5,      // 下落速度
+        speedX: (Math.random() - 0.5) * 0.3,    // 略微斜着飘
+        alpha: Math.random() * 0.5 + 0.5        // 透明度
+      };
+    }
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push(createStar());
+    }
+
+    function updateStars() {
+      for (let s of stars) {
+        s.y += s.speedY;
+        s.x += s.speedX;
+
+        // 超出底部后重新从上面生成
+        if (s.y > canvas.height + 5) {
+          s.x = Math.random() * canvas.width;
+          s.y = -5;
+          s.speedY = Math.random() * 1.5 + 0.5;
+          s.speedX = (Math.random() - 0.5) * 0.3;
+          s.radius = Math.random() * 1.6 + 0.4;
+          s.alpha = Math.random() * 0.5 + 0.5;
+        }
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 可选：轻微淡淡的背景，让星星更明显（也可以注释掉）
+      // ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(150, 150, 150,' + s.alpha + ')';
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function animate() {
+      updateStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
 </body>
 </html>
