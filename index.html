@@ -1,98 +1,244 @@
-<script>
-  const canvas = document.getElementById('starCanvas');
-  const ctx = canvas.getContext('2d');
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>随文字伸缩的波浪虚线边框 + 小熊 + 五角星坠落背景</title>
+  <style>
+    /* 整个页面居中 */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      font-family: sans-serif;
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative; /* 为了让内容在 canvas 之上 */
+      overflow: hidden;   /* 防止出现滚动条 */
+    }
 
-  // 生成星星
-  const stars = [];
-  const STAR_COUNT = 90;  // 星星数量，可调大/调小
+    /* 星星背景画布 */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;            /* 在所有内容后面 */
+      pointer-events: none;
+    }
 
-  function createStar() {
-    return {
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2.2 + 1.0,       // 控制星星大小
-      speedY: Math.random() * 1.5 + 0.5,       // 下落速度
-      speedX: (Math.random() - 0.5) * 0.3,     // 略微斜着飘
-      alpha: Math.random() * 0.5 + 0.5         // 透明度
-    };
-  }
+    /* 文本框 + 边框 + 小熊 整体容器 */
+    .card {
+      position: relative;
+      display: inline-flex;     /* 宽度由内容决定，高度固定 */
+      align-items: center;      /* 文本垂直居中 */
+      justify-content: center;  /* 文本水平居中 */
+      padding: 0 40px;          /* 左右内边距：文字与边框左右距离 */
+      height: 240px;            /* 上下间距 */
+      transform: translateY(-20px);
+      z-index: 10;              /* 确保在星星前面 */
+    }
 
-  for (let i = 0; i < STAR_COUNT; i++) {
-    stars.push(createStar());
-  }
+    /* 文字区域 */
+    .card-text {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      white-space: nowrap;      /* 一行显示，只横向变长 */
+      font-size: 18px;
+    }
 
-  function updateStars() {
-    for (let s of stars) {
-      s.y += s.speedY;
-      s.x += s.speedX;
+    /* SVG 边框铺满整个 card 外框 */
+    .border-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-      // 超出底部后重新从上面生成
-      if (s.y > canvas.height + 10) {
-        s.x = Math.random() * canvas.width;
-        s.y = -10;
-        s.speedY = Math.random() * 1.5 + 0.5;
-        s.speedX = (Math.random() - 0.5) * 0.3;
-        s.radius = Math.random() * 2.2 + 1.0;
-        s.alpha = Math.random() * 0.5 + 0.5;
+    .border-line {
+      fill: none;
+      stroke: black;
+      stroke-width: 2;              /* 虚线粗细固定 */
+      stroke-dasharray: 3 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;  /* 缩放时线宽不变 */
+    }
+
+    /* 小熊：大约半进半出，始终在底边中间 */
+    .gif-cross {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      bottom: -18px;          /* 想更贴近边框就调小一点，想更往下就调大一点 */
+      z-index: 3;
+      max-width: none;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ⭐ 星星坠落背景画布 -->
+  <canvas id="starCanvas"></canvas>
+
+  <div class="card">
+    <!-- 想写什么就改这里：只会左右变长/变短 -->
+    <div class="card-text">
+      这里是测试文字，或你想写的内容～
+    </div>
+
+    <!-- 波浪虚线边框：上下 5 个起伏，左右起伏幅度减小 -->
+    <svg class="border-svg" viewBox="0 0 100 50" preserveAspectRatio="none"
+         xmlns="http://www.w3.org/2000/svg">
+
+      <!-- 顶边：5 个柔和起伏 -->
+      <path class="border-line"
+        d="M 5 12
+           Q 13 10 21 12
+           Q 29 14 37 12
+           Q 45 10 53 12
+           Q 61 14 69 12
+           Q 77 10 95 12" />
+
+      <!-- 右边：5 个小起伏（幅度比之前小） -->
+      <path class="border-line"
+        d="M 95 12
+           Q 97 14 95 16
+           Q 93 20 95 24
+           Q 97 28 95 32
+           Q 93 36 95 38
+           Q 97 40 95 44" />
+
+      <!-- 底边：5 个柔和起伏，中间略低一点，给小熊“窝” -->
+      <path class="border-line"
+        d="M 95 44
+           Q 87 46 79 44
+           Q 71 42 63 44
+           Q 55 46 47 44
+           Q 39 42 31 44
+           Q 23 46 5 44" />
+
+      <!-- 左边：5 个小起伏，与右边镜像 -->
+      <path class="border-line"
+        d="M 5 44
+           Q 3 42 5 40
+           Q 7 36 5 32
+           Q 3 28 5 24
+           Q 7 20 5 16
+           Q 3 14 5 12" />
+    </svg>
+
+    <!-- bear.gif 和这个 html 放在同一目录下 -->
+    <img src="bear.gif" class="gif-cross" alt="bear">
+  </div>
+
+  <!-- ⭐ 五角星坠落效果脚本 -->
+  <script>
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // 生成星星数组
+    const stars = [];
+    const STAR_COUNT = 100;  // 星星数量
+
+    function createStar() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 3 + 2,       // 控制星星大小（2~5）
+        speedY: Math.random() * 1.5 + 0.5,   // 下落速度
+        speedX: (Math.random() - 0.5) * 0.4, // 略微左右飘
+        alpha: Math.random() * 0.5 + 0.5     // 透明度
+      };
+    }
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push(createStar());
+    }
+
+    function updateStars() {
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        s.y += s.speedY;
+        s.x += s.speedX;
+
+        // 超出底部后重新从上面生成
+        if (s.y > canvas.height + 10) {
+          stars[i] = createStar();
+          stars[i].y = -10;
+        }
       }
     }
-  }
 
-  // ⭐ 画五角星函数
-  function drawStarShape(ctx, x, y, outerRadius, alpha) {
-    const spikes = 5;
-    const innerRadius = outerRadius * 0.45;
-    let rot = -Math.PI / 2;     // 从正上方开始
-    let step = Math.PI / spikes;
+    // ⭐ 画五角星函数
+    function drawStarShape(ctx, x, y, outerRadius, alpha) {
+      const spikes = 5;
+      const innerRadius = outerRadius * 0.45;
+      let rot = -Math.PI / 2;       // 从正上方开始
+      const step = Math.PI / spikes;
 
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.beginPath();
-    ctx.moveTo(
-      Math.cos(rot) * outerRadius,
-      Math.sin(rot) * outerRadius
-    );
-
-    for (let i = 0; i < spikes; i++) {
-      rot += step;
-      ctx.lineTo(
-        Math.cos(rot) * innerRadius,
-        Math.sin(rot) * innerRadius
-      );
-      rot += step;
-      ctx.lineTo(
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.beginPath();
+      ctx.moveTo(
         Math.cos(rot) * outerRadius,
         Math.sin(rot) * outerRadius
       );
+
+      for (let i = 0; i < spikes; i++) {
+        rot += step;
+        ctx.lineTo(
+          Math.cos(rot) * innerRadius,
+          Math.sin(rot) * innerRadius
+        );
+        rot += step;
+        ctx.lineTo(
+          Math.cos(rot) * outerRadius,
+          Math.sin(rot) * outerRadius
+        );
+      }
+
+      ctx.closePath();
+      // 明显一点的淡黄色星星
+      ctx.fillStyle = 'rgba(255, 220, 120,' + alpha + ')';
+      ctx.fill();
+      ctx.restore();
     }
 
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(150, 150, 150,' + alpha + ')';
-    ctx.fill();
-    ctx.restore();
-  }
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  function drawStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let s of stars) {
-      // 用五角星代替小圆点
-      drawStarShape(ctx, s.x, s.y, s.radius, s.alpha);
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        drawStarShape(ctx, s.x, s.y, s.radius, s.alpha);
+      }
     }
-  }
 
-  function animate() {
-    updateStars();
-    drawStars();
-    requestAnimationFrame(animate);
-  }
+    function animate() {
+      updateStars();
+      drawStars();
+      requestAnimationFrame(animate);
+    }
 
-  animate();
-</script>
+    animate();
+  </script>
+
+</body>
+</html>
+
